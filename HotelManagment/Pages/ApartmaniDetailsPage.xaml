@@ -1,0 +1,143 @@
+﻿<Page x:Class="HotelManagment.Pages.ApartmaniDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HotelManagment.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ApartmaniDetailsPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Naslov Apartmana -->
+        <TextBlock x:Name="ApartmentName" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+
+        <!-- Informacije o apartmanu -->
+        <StackPanel Grid.Row="1" Margin="10">
+            <TextBlock Text="Kapacitet:" FontWeight="Bold" />
+            <TextBlock x:Name="ApartmentCapacity" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Oprema:" FontWeight="Bold"/>
+            <ListView x:Name="EquipmentList" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Cena apartmana:" FontWeight="Bold"/>
+            <DataGrid x:Name="PriceList"
+          AutoGenerateColumns="False"
+          SelectionMode="Single"
+          SelectionChanged="PriceList_SelectionChanged"
+          CanUserAddRows="False"
+          Width="Auto"
+          MaxWidth="500"
+          HorizontalAlignment="Left">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Cena po noći" Binding="{Binding cenaPoNoci}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Cena po osobi" Binding="{Binding cenaPoOsobi}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Text="Popusti:" FontWeight="Bold"/>
+            <DataGrid x:Name="DiscountList"
+          AutoGenerateColumns="False"
+          SelectionMode="Single"
+          SelectionChanged="DiscountList_SelectionChanged"
+          CanUserAddRows="False"
+          Width="Auto"
+          MaxWidth="400"
+          HorizontalAlignment="Left">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Naziv Popusta" Binding="{Binding nazivPopusta}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Vrednost" Binding="{Binding vrednost}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Text="Rezervacije:" FontWeight="Bold"/>
+            <DataGrid x:Name="ReservationList"
+          AutoGenerateColumns="False"
+          SelectionMode="Single"
+          SelectionChanged="ReservationList_SelectionChanged"
+          CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
+                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
+                    <DataGridTextColumn Header="Broj Gostiju" Binding="{Binding brojGostiju}" Width="*"/>
+                    <DataGridTextColumn Header="Cena" Binding="{Binding cenaKonacna}" Width="*"/>
+                    <DataGridTextColumn Header="Nacin Plačanja" Binding="{Binding nacinPlacanja}" Width="*"/>
+                    <DataGridTextColumn Header="Iznos Provizije" Binding="{Binding iznosProvizije}" Width="*"/>
+                    <DataGridTextColumn Header="Placeno" Binding="{Binding PlacenoTekst}" Width="*"/>
+                    <DataGridTextColumn Header="Ime Prezime" Binding="{Binding korisnik.imePrezime}" Width="*"/>
+                    <DataGridTextColumn Header="Naziv Agencije" Binding="{Binding agencija.nazivAgencije}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Page>

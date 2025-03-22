@@ -1,0 +1,76 @@
+﻿<Page x:Class="HotelManagment.Pages.AllRezervacijePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HotelManagment.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="1000"
+      Title="AllRezervacijePage">
+
+    <Grid>
+        <!-- Definišemo redove -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Naslov -->
+            <RowDefinition Height="Auto"/>
+            <!-- ComboBox-ovi -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid zauzima ostatak prostora -->
+        </Grid.RowDefinitions>
+
+        <!-- Naslov -->
+        <TextBlock Text="Lista Rezervacija" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,20" Grid.Row="0"/>
+
+        <!-- ComboBox-ovi u horizontalnom rasporedu -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,10">
+
+            <Button x:Name="KreirajRezervacijuButton" Content="Kreiraj Rezervaciju" Width="150" Margin="0,0,150,0" Click="KreirajRezervacijuButton_Click"/>
+
+            <ComboBox x:Name="AgencijaFilterComboBox" Width="150" Margin="0,0,10,0"
+                      SelectionChanged="AgencijaFilterComboBox_SelectionChanged">
+                <ComboBoxItem IsSelected="True" Content="Odaberite agenciju" />
+            </ComboBox>
+
+            <ComboBox x:Name="PlacenoFilterComboBox" Width="180" Margin="0,0,10,0"
+                      SelectionChanged="PlacenoFilterComboBox_SelectionChanged">
+                <ComboBoxItem IsSelected="True" Content="Odaberite status plaćanja" />
+                <ComboBoxItem Content="Plaćeno" />
+                <ComboBoxItem Content="Nije plaćeno" />
+            </ComboBox>
+
+            <ComboBox x:Name="NacinPlacanjaFilterComboBox" Width="160" SelectionChanged="NacinPlacanjaFilterComboBox_SelectionChanged">
+                <ComboBoxItem IsSelected="True" Content="Odaberite način plaćanja" />
+                <ComboBoxItem Content="Keš" />
+                <ComboBoxItem Content="Kartica" />
+            </ComboBox>
+
+            <Button x:Name="OcistiFiltereButton" Content="Ocisti Filtere" Width="150" Margin="150,0,0,0" Click="OcistiFiltereButton_Click"/>
+
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="RezervacijeDataGrid" Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
+                  VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
+                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Apartman" Width="150" Binding="{Binding apartman.nazivApartmana}" />
+                <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />
+                <DataGridTextColumn Header="Datum Od" Width="120" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
+                <DataGridTextColumn Header="Datum Do" Width="120" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
+                <DataGridTextColumn Header="Broj Gostiju" Width="70" Binding="{Binding brojGostiju}" />
+                <DataGridTextColumn Header="Cena" Width="50" Binding="{Binding cenaKonacna}" />
+                <DataGridTextColumn Header="Plaćeno" Width="55" Binding="{Binding PlacenoTekst}" />
+                <DataGridTextColumn Header="Način Plaćanja" Width="90" Binding="{Binding nacinPlacanja}" />
+                <DataGridTextColumn Header="Provizija" Width="60" Binding="{Binding iznosProvizije}" />
+                <DataGridTextColumn Header="Agencija" Width="150" Binding="{Binding agencija.nazivAgencije}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Ukupna cena -->
+        <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="3" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,0,20">
+            Ukupna cena: 0 RSD
+        </TextBlock>
+        
+    </Grid>
+</Page>

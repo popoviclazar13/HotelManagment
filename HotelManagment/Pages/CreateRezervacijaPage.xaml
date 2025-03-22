@@ -1,0 +1,56 @@
+﻿<Page x:Class="HotelManagment.Pages.CreateRezervacijaPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HotelManagment.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CreateRezervacijaPage">
+
+    <Grid>
+        <TextBlock Text="Kreiranje Rezervacije" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,70,0,0">
+            <!-- Početni Datum -->
+            <TextBlock Text="Početni Datum:" Margin="5"/>
+            <DatePicker x:Name="StartDatePicker" Margin="5" SelectedDateChanged="StartDatePicker_SelectedDateChanged" Width="300"/>
+
+            <!-- Krajnji Datum -->
+            <TextBlock Text="Krajnji Datum:" Margin="5"/>
+            <DatePicker x:Name="EndDatePicker" Margin="5" SelectedDateChanged="EndDatePicker_SelectedDateChanged" Width="300"/>
+
+            <TextBlock Text="Apartman:" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+            <ComboBox x:Name="ApartmentComboBox" Grid.Row="9" Grid.Column="2" DisplayMemberPath="nazivApartmana" SelectedValuePath="apartmanId" SelectionChanged="ApartmentComboBox_SelectionChanged" Width="300"/>
+
+            <!-- Broj Gostiju -->
+            <TextBlock Text="Broj Gostiju:" Margin="5"/>
+            <ComboBox x:Name="GuestCountComboBox" Margin="5" Width="300"/>
+
+            <!-- Cena -->
+            <TextBlock Text="Cena:" Margin="5"/>
+            <TextBox x:Name="PriceTextBox" Margin="5" Width="300"/>
+
+            <!-- Način Plaćanja -->
+            <TextBlock Text="Način Plaćanja:" Margin="5"/>
+            <ComboBox x:Name="PaymentMethodComboBox" Margin="5" Width="300">
+                <ComboBoxItem Content="Keš"/>
+                <ComboBoxItem Content="Kartica"/>
+            </ComboBox>
+
+            <!-- Korisnik -->
+            <TextBlock Text="Korisnik:" Margin="5"/>
+            <ComboBox x:Name="UserComboBox" Margin="5" DisplayMemberPath="imePrezime" SelectedValuePath="korisnikId" Width="300"/>
+
+            <!-- Agencija -->
+            <TextBlock Text="Agencija:" Margin="5"/>
+            <ComboBox x:Name="AgencyComboBox" Margin="5" DisplayMemberPath="nazivAgencije" SelectedValuePath="agencijaId" Width="300"/>
+
+            <!-- Dugme za Kreiranje -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="Kreiraj" Width="100" Margin="5" Click="CreateButton_Click"/>
+                <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,34 @@
+﻿<Page x:Class="HotelManagment.Pages.CenaApartmanaEditWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HotelManagment.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CenaApartmanaEditWindow">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Početni Datum:" Grid.Row="0"/>
+        <DatePicker x:Name="PocetniDatumPicker" Grid.Row="0" Margin="120,0,0,5"/>
+
+        <TextBlock Text="Krajnji Datum:" Grid.Row="1"/>
+        <DatePicker x:Name="KrajnjiDatumPicker" Grid.Row="1" Margin="120,0,0,5"/>
+
+        <TextBlock Text="Cena po noći:" Grid.Row="2"/>
+        <TextBox x:Name="CenaPoNociBox" Grid.Row="2" Margin="120,0,0,5"/>
+
+        <TextBlock Text="Cena po osobi:" Grid.Row="3"/>
+        <TextBox x:Name="CenaPoOsobiBox" Grid.Row="3" Margin="120,0,0,5"/>
+
+        <Button Content="Sačuvaj" Grid.Row="4" Click="Save_Click" HorizontalAlignment="Right" Margin="0,10,10,0"/>
+    </Grid>
+</Page>

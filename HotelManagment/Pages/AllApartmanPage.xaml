@@ -9,6 +9,59 @@
       Title="AllApartmanPage">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <!-- Naslov -->
+            <RowDefinition Height="Auto"/>
+            <!-- Dugmici za restart i filter -->
+            <RowDefinition Height="Auto"/>
+            <!-- Filteri (datum i tip apartmana) -->
+            <RowDefinition Height="Auto"/>
+            <!-- DataGrid zauzima ostatak prostora -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Naslov -->
+        <TextBlock Text="Lista Apartmana" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,20" Grid.Row="0"/>
+
+        <!-- Dugmici za restart i filter -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,10">
+            <!-- Filter po tipovima apartmana -->
+            <ComboBox x:Name="TipApartmanaFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="TipApartmanaFilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="Odaberite tip apartmana"/>
+                <!-- Additional ComboBoxItems will be added dynamically in code-behind -->
+            </ComboBox>
+
+            <!-- Filter po zauzetosti -->
+            <ComboBox x:Name="ZauzetFilterComboz" Width="150" Margin="0,0,10,0" SelectionChanged="ZauzetFilterComboz_SelectionChanged">
+                <ComboBoxItem Content="Odaberite status"/>
+                <ComboBoxItem Content="Zauzet"/>
+                <ComboBoxItem Content="Slobodan"/>
+                <!-- Additional ComboBoxItems will be added dynamically in code-behind -->
+            </ComboBox>
+
+            <Button Content="Očisti filtere" Width="120" Click="ClearFiltersButton_Click" Margin="200,0,10,0"/>
+        </StackPanel>
+
+        <!-- Filteri po datumima i tipovima apartmana -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Margin="0,10,0,10">
+            <!-- Filter po datumu -->
+            <TextBlock Text="Od datuma:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <DatePicker x:Name="PocetniDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
+
+            <TextBlock Text="Do datuma:" VerticalAlignment="Center" Margin="10,0,10,0"/>
+            <DatePicker x:Name="KrajnjiDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
+        </StackPanel>
+
+        <!-- DataGrid za prikaz apartmana -->
+        <DataGrid x:Name="ApartmaniDataGrid" Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
+                  VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
+                   Grid.Row="3">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Naziv Apartmana" Width="150" Binding="{Binding nazivApartmana}" />
+                <DataGridTextColumn Header="Sprat" Width="100" Binding="{Binding brojSprata}" />
+                <DataGridTextColumn Header="Kapacitet" Width="100" Binding="{Binding ukupniKapacitet}" />
+                <DataGridTextColumn Header="Zauzet" Width="100" Binding="{Binding zauzet}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

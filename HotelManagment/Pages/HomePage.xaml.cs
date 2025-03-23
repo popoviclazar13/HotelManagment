@@ -113,6 +113,10 @@ namespace HotelManagment.Pages
         {
             NavigationService?.Navigate(new AllKorisniciPage(_korisnikService));
         }
+        private void Apartmani_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new AllApartmanPage(_apartmanService, _rezervacijaService));
+        }
 
     }
 }

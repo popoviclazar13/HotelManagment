@@ -19,6 +19,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                <Button Content="Apartmani" Width="100" Height="50" FontSize="16" Margin="10"
+                    Background="LightGray" Foreground="Black" Click="Apartmani_Click"/>
                 <Button Content="Rezervacije" Width="100" Height="50" FontSize="16" Margin="10"
                         Background="LightGray" Foreground="Black" Click="Rezervacije_Click"/>
                 <Button Content="Usluge" Width="100" Height="50" FontSize="16" Margin="10"

@@ -39,7 +39,9 @@ namespace HotelManagment.Repository
 
         public async Task<List<Apartman>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet
+                .Include(a => a.tipApartmana)  // Include the related 'tipApartmana' entity
+                .ToListAsync();
         }
         //posebna metoda
         public async Task<List<Apartman>> GetAllAsync(Expression<Func<Apartman, bool>> predicate)

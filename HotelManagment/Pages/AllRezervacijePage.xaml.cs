@@ -103,7 +103,7 @@ namespace HotelManagment.Pages
         {
             var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
 
-            // Filtriranje po Agenciji (ako je selektovano nešto drugo osim "Odaberite agenciju")
+            // Filtriranje po Agenciji
             var selectedAgencija = AgencijaFilterComboBox.SelectedItem as string;
             if (selectedAgencija != null && selectedAgencija != "Odaberite agenciju")
             {
@@ -125,13 +125,25 @@ namespace HotelManagment.Pages
                 filtriraneRezervacije = filtriraneRezervacije.Where(r => r.nacinPlacanja == selectedNacinPlacanja.Content.ToString());
             }
 
-            // Ažuriranje DataGrid-a sa filtriranim podacima
+            // Filtriranje po datumu
+            DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
+            DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
+
+            if (pocetniDatum.HasValue && krajnjiDatum.HasValue)
+            {
+                // Filter reservations based on the selected date range
+                filtriraneRezervacije = filtriraneRezervacije.Where(r =>
+                    (r.pocetniDatum >= pocetniDatum && r.pocetniDatum <= krajnjiDatum) ||
+                    (r.krajnjiDatum >= pocetniDatum && r.krajnjiDatum <= krajnjiDatum) ||
+                    (r.pocetniDatum <= pocetniDatum && r.krajnjiDatum >= krajnjiDatum)
+                );
+            }
+
+            // Update the DataGrid with the filtered reservations
             RezervacijeDataGrid.ItemsSource = filtriraneRezervacije.ToList();
 
-            // Izračunavanje ukupne cene (u evrima) bez konverzije, jer je cena već u evrima
-            double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna); // Cena je već u evrima
-
-            // Prikazivanje ukupne cene u evrima u TextBlock-u
+            // Calculate the total price
+            double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna);
             UkupnaCenaTextBlock.Text = $"Ukupna cena: {ukupnaCena:F2} EUR";
         }
 
@@ -168,8 +180,17 @@ namespace HotelManagment.Pages
             PlacenoFilterComboBox.SelectedIndex = 0;
             NacinPlacanjaFilterComboBox.SelectedIndex = 0;
 
+            // Reset date pickers
+            PocetniDatumPicker.SelectedDate = null;
+            KrajnjiDatumPicker.SelectedDate = null;
+
             // Refresh the reservation list without any filters applied
             FiltrirajRezervacije();
+        }
+        private void DatumFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+                FiltrirajRezervacije();
         }
     }
 }

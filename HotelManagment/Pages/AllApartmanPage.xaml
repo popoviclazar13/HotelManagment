@@ -10,14 +10,16 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <!-- Naslov -->
             <RowDefinition Height="Auto"/>
             <!-- Dugmici za restart i filter -->
             <RowDefinition Height="Auto"/>
-            <!-- Filteri (datum i tip apartmana) -->
-            <RowDefinition Height="Auto"/>
-            <!-- DataGrid zauzima ostatak prostora -->
+            <!-- Filteri po datumima i tipovima apartmana -->
             <RowDefinition Height="*"/>
+            <!-- DataGrid zauzima ostatak prostora -->
+            <RowDefinition Height="Auto"/>
+            <!-- Dugme za izvoz u Excel -->
         </Grid.RowDefinitions>
 
         <!-- Naslov -->
@@ -28,7 +30,6 @@
             <!-- Filter po tipovima apartmana -->
             <ComboBox x:Name="TipApartmanaFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="TipApartmanaFilterComboBox_SelectionChanged">
                 <ComboBoxItem Content="Odaberite tip apartmana"/>
-                <!-- Additional ComboBoxItems will be added dynamically in code-behind -->
             </ComboBox>
 
             <!-- Filter po zauzetosti -->
@@ -36,7 +37,6 @@
                 <ComboBoxItem Content="Odaberite status"/>
                 <ComboBoxItem Content="Zauzet"/>
                 <ComboBoxItem Content="Slobodan"/>
-                <!-- Additional ComboBoxItems will be added dynamically in code-behind -->
             </ComboBox>
 
             <Button Content="Očisti filtere" Width="120" Click="ClearFiltersButton_Click" Margin="200,0,10,0"/>
@@ -44,7 +44,6 @@
 
         <!-- Filteri po datumima i tipovima apartmana -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Margin="0,10,0,10">
-            <!-- Filter po datumu -->
             <TextBlock Text="Od datuma:" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <DatePicker x:Name="PocetniDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
 
@@ -63,5 +62,10 @@
                 <DataGridTextColumn Header="Zauzet" Width="100" Binding="{Binding zauzet}" />
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Dugme za izvoz u Excel -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="4" Margin="0,10,20,10">
+            <Button Content="Izvezi u Excel" Width="150" Click="ExportToExcel_Click"/>
+        </StackPanel>
     </Grid>
 </Page>

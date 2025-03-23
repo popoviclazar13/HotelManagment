@@ -1,7 +1,9 @@
 ﻿using HotelManagment.Entitys;
 using HotelManagment.ServiceRepository;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +27,7 @@ namespace HotelManagment.Pages
         private readonly IApartmanService _apartmanService;
         private readonly IRezervacijaService _rezervacijaService;
         private List<Apartman> _sviApartmani = new List<Apartman>();
+        private List<Apartman> _filtriraniApartmani = new List<Apartman>();
 
         public AllApartmanPage(IApartmanService apartmanService, IRezervacijaService rezervacijaService)
         {
@@ -35,8 +38,7 @@ namespace HotelManagment.Pages
         }
         private async void LoadApartmani()
         {
-            try
-            {
+
                 var apartmani = await _apartmanService.GetAllApartman();  // Assuming GetAllApartmani returns a list of apartments
                 _sviApartmani = apartmani.ToList();  // Save the fetched apartments
                 ApartmaniDataGrid.ItemsSource = apartmani;  // Bind data to the DataGrid
@@ -44,11 +46,7 @@ namespace HotelManagment.Pages
 
                 // Set default selection for the "Zauzet" filter
                 ZauzetFilterComboz.SelectedIndex = 0;  // Set "Odaberite status" as the initial selection
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Došlo je do greške prilikom učitavanja apartmana: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            
         }
 
         private void PopuniComboBoxTipApartmana()
@@ -81,13 +79,6 @@ namespace HotelManagment.Pages
             var selectedZauzetItem = ZauzetFilterComboz.SelectedItem as ComboBoxItem;
             string selectedZauzetStatus = selectedZauzetItem?.Content.ToString();
 
-            // Debug ispis selektovanih filtera
-            MessageBox.Show($"Odabrani filteri:\n" +
-                            $"Pocetni Datum: {PocetniDatumPicker.SelectedDate?.ToString("dd.MM.yyyy") ?? "Nije odabran"}\n" +
-                            $"Krajnji Datum: {KrajnjiDatumPicker.SelectedDate?.ToString("dd.MM.yyyy") ?? "Nije odabran"}\n" +
-                            $"Status: {selectedZauzetStatus ?? "Nije odabran"}",
-                            "Debug - Filteri", MessageBoxButton.OK, MessageBoxImage.Information);
-
             DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
             DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
 
@@ -96,12 +87,7 @@ namespace HotelManagment.Pages
             {
                 bool trazimoZauzete = selectedZauzetStatus == "Zauzet";
 
-                try
-                {
                     var sveRezervacije = await _rezervacijaService.GetAllRezervacija();
-
-                    MessageBox.Show($"Učitano rezervacija: {sveRezervacije.Count}",
-                                    "Debug - Rezervacije", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     filtriraniApartmani = filtriraniApartmani.Where(a =>
                     {
@@ -114,18 +100,14 @@ namespace HotelManagment.Pages
                         return trazimoZauzete ? apartmanJeZauzet : !apartmanJeZauzet;
                     });
 
-                    MessageBox.Show($"Broj filtriranih apartmana: {filtriraniApartmani.Count()}",
-                                    "Debug - Filtrirani apartmani", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Greška prilikom učitavanja rezervacija: {ex.Message}",
-                                    "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                
             }
+            // Ažuriraj listu filtriranih apartmana
+            _filtriraniApartmani = filtriraniApartmani.ToList();
 
             ApartmaniDataGrid.ItemsSource = filtriraniApartmani.ToList();
             ApartmaniDataGrid.Items.Refresh();
+
         }
 
         private async void TipApartmanaFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -142,8 +124,6 @@ namespace HotelManagment.Pages
 
         private async void ZauzetFilterComboz_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show("Event SelectionChanged za zauzet filter je pokrenut!",
-                    "Debug", MessageBoxButton.OK, MessageBoxImage.Information);
             if (IsLoaded)
                 await FiltrirajApartmane();
         }
@@ -157,6 +137,74 @@ namespace HotelManagment.Pages
             ZauzetFilterComboz.SelectedIndex = 0;
 
             await FiltrirajApartmane(); // Poziv filtriranja asinhrono
+        }
+        // Dodaj kod za izvoz u Excel
+        private async void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Prvo, filtriraj apartmane sa selektovanim filterima
+                await FiltrirajApartmane();
+
+                // Kreiraj Excel paket
+                using (var package = new ExcelPackage())
+                {
+                    // Dodaj radni list
+                    var worksheet = package.Workbook.Worksheets.Add("Apartmani");
+
+                    // Add header for filter details
+                    worksheet.Cells[1, 1].Value = "Filter Details";
+                    worksheet.Cells[2, 1].Value = "Pocetni Datum:";
+                    worksheet.Cells[2, 2].Value = PocetniDatumPicker.SelectedDate?.ToString("yyyy-MM-dd") ?? "N/A";
+                    worksheet.Cells[3, 1].Value = "Krajnji Datum:";
+                    worksheet.Cells[3, 2].Value = KrajnjiDatumPicker.SelectedDate?.ToString("yyyy-MM-dd") ?? "N/A";
+
+                    // Add status filter (Zauzet or Slobodan)
+                    var selectedZauzetItem = ZauzetFilterComboz.SelectedItem as ComboBoxItem;
+                    string selectedZauzetStatus = selectedZauzetItem?.Content.ToString() ?? "N/A";
+                    worksheet.Cells[4, 1].Value = "Status:";
+                    worksheet.Cells[4, 2].Value = selectedZauzetStatus;
+
+                    // Add a space line between filter details and apartments list
+                    worksheet.Cells[6, 1].Value = "Naziv Apartmana";
+                    worksheet.Cells[6, 2].Value = "Sprat";
+                    worksheet.Cells[6, 3].Value = "Kapacitet";
+                    worksheet.Cells[6, 4].Value = "Zauzet";
+
+                    // Populate filtered apartment data starting from row 7
+                    int row = 7;
+                    foreach (var apartman in _filtriraniApartmani)
+                    {
+                        worksheet.Cells[row, 1].Value = apartman.nazivApartmana;
+                        worksheet.Cells[row, 2].Value = apartman.brojSprata;
+                        worksheet.Cells[row, 3].Value = apartman.ukupniKapacitet;
+                        worksheet.Cells[row, 4].Value = apartman.zauzet ? "Zauzet" : "Slobodan";
+                        row++;
+                    }
+
+                    // Spremi Excel fajl
+                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+                    {
+                        Filter = "Excel Files (*.xlsx)|*.xlsx",
+                        FileName = "Apartmani_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+                    };
+
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        var filePath = saveFileDialog.FileName;
+                        FileInfo fileInfo = new FileInfo(filePath);
+
+                        // Spremi fajl
+                        package.SaveAs(fileInfo);
+
+                        MessageBox.Show("Podaci su uspešno izvezeni u Excel!", "Uspešno", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Došlo je do greške prilikom izvoza: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

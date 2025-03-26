@@ -26,6 +26,40 @@ namespace HotelManagment.Entitys
         [NotMapped]
         public int ukupniKapacitet => kapacitetOdrasli + kapacitetDeca;
 
+        /*[NotMapped]
+        public List<DateTime> SlobodniTermini
+        {
+            get
+            {
+                var sviDani = Enumerable.Range(1, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
+                    .Select(d => new DateTime(DateTime.Now.Year, DateTime.Now.Month, d))
+                    .ToList();
+
+                var zauzeti = listaRezervacija
+                    .SelectMany(r => Enumerable.Range(0, (r.krajnjiDatum - r.pocetniDatum).Days + 1)
+                    .Select(offset => r.pocetniDatum.AddDays(offset)))
+                    .ToList();
+
+                return sviDani.Except(zauzeti).ToList();
+            }
+        }
+
+        [NotMapped]
+        public List<DateTime> ZauzetiTermini
+        {
+            get
+            {
+                return listaRezervacija
+                    .SelectMany(r => Enumerable.Range(0, (r.krajnjiDatum - r.pocetniDatum).Days + 1)
+                    .Select(offset => r.pocetniDatum.AddDays(offset)))
+                    .ToList();
+            }
+        }*/
+        [NotMapped]
+        public string SlobodniTermini { get; set; }
+        [NotMapped]
+        public string ZauzetiTermini { get; set; }
+
         public List<Rezervacija> listaRezervacija { get; set; } = new List<Rezervacija>();
         public List<CenaApartmana> listaCeneApartmana { get; set; } = new List<CenaApartmana>();
         public List<ApartmanOprema> listaApartmanOprema { get; set; } = new List<ApartmanOprema>();

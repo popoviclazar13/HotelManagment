@@ -27,6 +27,9 @@
 
         <!-- Dugmici za restart i filter -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,10">
+            <ComboBox x:Name="ApartmentFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="ApartmentFilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="Odaberite apartman"/>
+            </ComboBox>
             <!-- Filter po tipovima apartmana -->
             <ComboBox x:Name="TipApartmanaFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="TipApartmanaFilterComboBox_SelectionChanged">
                 <ComboBoxItem Content="Odaberite tip apartmana"/>
@@ -56,10 +59,12 @@
                   VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
                    Grid.Row="3">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Naziv Apartmana" Width="150" Binding="{Binding nazivApartmana}" />
-                <DataGridTextColumn Header="Sprat" Width="100" Binding="{Binding brojSprata}" />
-                <DataGridTextColumn Header="Kapacitet" Width="100" Binding="{Binding ukupniKapacitet}" />
-                <DataGridTextColumn Header="Zauzet" Width="100" Binding="{Binding zauzet}" />
+                <DataGridTextColumn Header="Naziv Apartmana" Width="120" Binding="{Binding nazivApartmana}" />
+                <DataGridTextColumn Header="Sprat" Width="50" Binding="{Binding brojSprata}" />
+                <DataGridTextColumn Header="Kapacitet" Width="70" Binding="{Binding ukupniKapacitet}" />
+                <DataGridTextColumn Header="Zauzet" Width="70" Binding="{Binding zauzet}" />
+                <DataGridTextColumn Header="Slobodni Termini" Binding="{Binding SlobodniTermini}" Width="120" />
+                <DataGridTextColumn Header="Zauzeti Termini" Binding="{Binding ZauzetiTermini}" Width="120" />
             </DataGrid.Columns>
         </DataGrid>
 

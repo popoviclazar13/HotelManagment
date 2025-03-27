@@ -7,62 +7,43 @@
       d:DesignHeight="500" d:DesignWidth="800"
       Title="Izmena Rezervacije">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <TextBlock Text="Ažuriranje Rezervacije" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <!-- Fiksna širina za tekst -->
-            <ColumnDefinition Width="20"/>
-            <!-- Razmak između -->
-            <ColumnDefinition Width="200"/>
-            <!-- Fiksna širina za unos -->
-        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,70,0,0">
+            <TextBlock Text="Početni Datum:" Margin="5"/>
+            <DatePicker x:Name="StartDatePicker" Margin="5" Width="300"/>
 
-        <TextBlock Text="Početni Datum:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <DatePicker x:Name="StartDatePicker" Grid.Row="0" Grid.Column="2" Width="200"/>
+            <TextBlock Text="Krajnji Datum:" Margin="5"/>
+            <DatePicker x:Name="EndDatePicker" Margin="5" Width="300"/>
 
-        <TextBlock Text="Krajnji Datum:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <DatePicker x:Name="EndDatePicker" Grid.Row="1" Grid.Column="2" Width="200"/>
+            <TextBlock Text="Broj Gostiju:" Margin="5"/>
+            <ComboBox x:Name="GuestCountComboBox" Margin="5" Width="300"/>
 
-        <TextBlock Text="Broj Gostiju:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="GuestCountComboBox" Grid.Row="2" Grid.Column="2" Width="200"/>
+            <TextBlock Text="Konačna Cena:" Margin="5"/>
+            <TextBox x:Name="FinalPriceTextBox" Margin="5" Width="300"/>
 
-        <TextBlock Text="Konačna Cena:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="FinalPriceTextBox" Grid.Row="3" Grid.Column="2" Width="200"/>
+            <TextBlock Text="Način Plaćanja:" Margin="5"/>
+            <ComboBox x:Name="PaymentMethodComboBox" Margin="5" Width="300">
+                <ComboBoxItem Content="Keš"/>
+                <ComboBoxItem Content="Kartica"/>
+            </ComboBox>
 
-        <TextBlock Text="Način Plaćanja:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="PaymentMethodComboBox" Grid.Row="4" Grid.Column="2" Width="200">
-            <ComboBoxItem Content="Keš"/>
-            <ComboBoxItem Content="Kartica"/>
-        </ComboBox>
+            <TextBlock Text="Iznos Provizije:" Margin="5"/>
+            <TextBox x:Name="CommissionAmountTextBox" Margin="5" Width="300"/>
 
-        <TextBlock Text="Iznos Provizije:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="CommissionAmountTextBox" Grid.Row="5" Grid.Column="2" Width="200"/>
+            <CheckBox x:Name="PaidCheckBox" Content="Plaćeno" Margin="5"/>
 
-        <CheckBox x:Name="PaidCheckBox" Content="Plaćeno" Grid.Row="6" Grid.Column="2"/>
+            <TextBlock Text="Korisnik:" Margin="5"/>
+            <ComboBox x:Name="UserComboBox" Margin="5" Width="300" DisplayMemberPath="imePrezime" SelectedValuePath="korisnikId"/>
 
-        <TextBlock Text="Korisnik:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="UserComboBox" Grid.Row="7" Grid.Column="2" DisplayMemberPath="imePrezime" SelectedValuePath="korisnikId" Width="200"/>
+            <TextBlock Text="Agencija:" Margin="5"/>
+            <ComboBox x:Name="AgencyComboBox" Margin="5" Width="300" DisplayMemberPath="nazivAgencije" SelectedValuePath="agencijaId"/>
 
-        <TextBlock Text="Agencija:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="AgencyComboBox" Grid.Row="8" Grid.Column="2" DisplayMemberPath="nazivAgencije" SelectedValuePath="agencijaId" Width="200"/>
-
-        <!-- Dugme u posebnom Grid redu koji je samo za njega -->
-        <Grid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3">
-            <Button Content="Sačuvaj" Click="SaveButton_Click" Width="120" HorizontalAlignment="Right" Margin="0,10,0,0"/>
-        </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="Sačuvaj" Width="100" Margin="5" Click="SaveButton_Click"/>
+                <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

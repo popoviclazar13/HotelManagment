@@ -61,6 +61,8 @@ namespace HotelManagment.Pages
                     ApartmaniDataGrid.ItemsSource = apartmani;  // Binduj podatke na DataGrid
                     PopuniComboBoxTipApartmana();  // Popuni filter combo box (ako je potrebno)
                     PopuniComboBoxApartmana();
+                    PopuniComboBoxSprat();
+                    PopuniComboBoxKrevet();
 
                     // Setuj podrazumevani odabir za "Zauzet" filter
                     ZauzetFilterComboz.SelectedIndex = 0;  // Setuj "Odaberite status" kao početni izbor
@@ -101,6 +103,40 @@ namespace HotelManagment.Pages
             }
 
             ApartmentFilterComboBox.SelectedIndex = 0; // Postavljanje default selekcije
+        }
+        private void PopuniComboBoxSprat()
+        {
+            if (_sviApartmani == null || !_sviApartmani.Any())
+                return;
+
+            SpratFilterComboBox.Items.Clear();
+            SpratFilterComboBox.Items.Add("Odaberite sprat"); // Default opcija
+
+            var spratovi = _sviApartmani.Select(a => a.brojSprata).Distinct().OrderBy(s => s).ToList();
+
+            foreach (var sprat in spratovi)
+            {
+                SpratFilterComboBox.Items.Add(sprat.ToString()); // Dodavanje broja sprata kao string
+            }
+
+            SpratFilterComboBox.SelectedIndex = 0; // Postavljanje default selekcije
+        }
+        private void PopuniComboBoxKrevet()
+        {
+            if (_sviApartmani == null || !_sviApartmani.Any())
+                return;
+
+            KrevetiFilterComboBox.Items.Clear();
+            KrevetiFilterComboBox.Items.Add("Odaberite broj kreveta"); // Default opcija
+
+            var brojeviKreveta = _sviApartmani.Select(a => a.ukupniKapacitet).Distinct().OrderBy(k => k).ToList();
+
+            foreach (var brojKreveta in brojeviKreveta)
+            {
+                KrevetiFilterComboBox.Items.Add(brojKreveta.ToString()); // Dodavanje broja kreveta kao string
+            }
+
+            KrevetiFilterComboBox.SelectedIndex = 0; // Postavljanje default selekcije
         }
 
         /*private async Task FiltrirajApartmane()
@@ -168,11 +204,31 @@ namespace HotelManagment.Pages
                 selectedZauzetStatus = null;
             }
 
-            // **Filter po selektovanom apartmanu iz ComboBox-a**
+            // **Filter po selektovanom apartmanu**
             var selectedApartmentName = ApartmentFilterComboBox.SelectedItem as string;
             if (!string.IsNullOrEmpty(selectedApartmentName) && selectedApartmentName != "Odaberite apartman")
             {
                 filtriraniApartmani = filtriraniApartmani.Where(a => a.nazivApartmana == selectedApartmentName);
+            }
+
+            // **Filter po spratu**
+            var selectedSprat = SpratFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedSprat) && selectedSprat != "Odaberite sprat")
+            {
+                if (int.TryParse(selectedSprat, out int spratValue))
+                {
+                    filtriraniApartmani = filtriraniApartmani.Where(a => a.brojSprata == spratValue);
+                }
+            }
+
+            // **Filter po broju kreveta**
+            var selectedKrevet = KrevetiFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedKrevet) && selectedKrevet != "Odaberite broj kreveta")
+            {
+                if (int.TryParse(selectedKrevet, out int krevetValue))
+                {
+                    filtriraniApartmani = filtriraniApartmani.Where(a => a.ukupniKapacitet == krevetValue);
+                }
             }
 
             DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
@@ -430,6 +486,17 @@ namespace HotelManagment.Pages
             if (IsLoaded && ApartmentFilterComboBox.SelectedItem != null)
                 await FiltrirajApartmane();
         }
+        private async void SpratFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        { 
+            if (IsLoaded && SpratFilterComboBox.SelectedItem != null)
+                await FiltrirajApartmane();
+        }
+        private async void KrevetFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && KrevetiFilterComboBox.SelectedItem != null)
+                await FiltrirajApartmane();
+        }
+
 
         private async void ClearFiltersButton_Click(object sender, RoutedEventArgs e)
         {
@@ -439,6 +506,8 @@ namespace HotelManagment.Pages
             TipApartmanaFilterComboBox.SelectedIndex = 0;
             ZauzetFilterComboz.SelectedIndex = 0;
             ApartmentFilterComboBox.SelectedIndex = 0;
+            KrevetiFilterComboBox.SelectedIndex = 0;
+            SpratFilterComboBox.SelectedIndex = 0;
 
             await FiltrirajApartmane(); // Poziv filtriranja asinhrono
         }

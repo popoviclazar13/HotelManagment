@@ -165,7 +165,7 @@ namespace HotelManagment.Pages
                 ukupnaCena = konacnaCena,  // Postavljanje konačne cene
                 cenaKonacna = konacnaCena, // Postavljanje konačne cene
                 iznosProvizije = 0, // Ako se primenjuje provizija
-                placeno = false,
+                placeno = PaidCheckBox.IsChecked ?? false,
                 komentar = ""
             };
 
@@ -173,6 +173,13 @@ namespace HotelManagment.Pages
             {
                 await _rezervacijaService.AddRezervacija(newRezervacija);
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Pozivanje metode za osvežavanje rezervacija ako postoji
+                if (NavigationService.Content is AllRezervacijePage rezervacijePage)
+                {
+                    rezervacijePage.LoadRezervacije();
+                }
+
+                NavigationService.GoBack();
             }
             catch (Exception ex)
             {

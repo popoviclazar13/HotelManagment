@@ -63,5 +63,9 @@ namespace HotelManagment.Pages
             // Vraćanje na prethodnu stranicu
             NavigationService.GoBack();
         }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
     }
 }

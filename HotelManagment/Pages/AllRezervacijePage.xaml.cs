@@ -43,7 +43,7 @@ namespace HotelManagment.Pages
             _apartmanPopustService = apartmanPopustService;
             LoadRezervacije();
         }
-        private async void LoadRezervacije()
+        public async void LoadRezervacije()
         {
             try
             {

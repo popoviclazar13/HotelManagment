@@ -121,5 +121,9 @@ namespace HotelManagment.Pages
                 ReservationList.SelectedItem = null; // Resetovanje selekcije
             }
         }
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
     }
 }

@@ -105,6 +105,10 @@ namespace HotelManagment.Pages
 
             NavigationService.GoBack();
         }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
         private void LoadGuestCountComboBox()
         {
             if (SelectedReservation.apartman != null)

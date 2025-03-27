@@ -65,6 +65,10 @@ namespace HotelManagment.Pages
                 MessageBox.Show($"Došlo je do greške prilikom čuvanja korisnika: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
         // Funkcija koja preuzima sve zemlje sa RestCountries API-ja bez dodatnih klasa
         public class Country
         {

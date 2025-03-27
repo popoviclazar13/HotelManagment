@@ -9,26 +9,25 @@
       Title="CenaApartmanaEditWindow">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <TextBlock Text="Ažuriranje Cene Apartmana" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
-        <TextBlock Text="Početni Datum:" Grid.Row="0"/>
-        <DatePicker x:Name="PocetniDatumPicker" Grid.Row="0" Margin="120,0,0,5"/>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,70,0,0">
+            <TextBlock Text="Početni Datum:" Margin="5"/>
+            <DatePicker x:Name="PocetniDatumPicker" Margin="5" Width="300"/>
 
-        <TextBlock Text="Krajnji Datum:" Grid.Row="1"/>
-        <DatePicker x:Name="KrajnjiDatumPicker" Grid.Row="1" Margin="120,0,0,5"/>
+            <TextBlock Text="Krajnji Datum:" Margin="5"/>
+            <DatePicker x:Name="KrajnjiDatumPicker" Margin="5" Width="300"/>
 
-        <TextBlock Text="Cena po noći:" Grid.Row="2"/>
-        <TextBox x:Name="CenaPoNociBox" Grid.Row="2" Margin="120,0,0,5"/>
+            <TextBlock Text="Cena po noći:" Margin="5"/>
+            <TextBox x:Name="CenaPoNociBox" Margin="5" Width="300"/>
 
-        <TextBlock Text="Cena po osobi:" Grid.Row="3"/>
-        <TextBox x:Name="CenaPoOsobiBox" Grid.Row="3" Margin="120,0,0,5"/>
+            <TextBlock Text="Cena po osobi:" Margin="5"/>
+            <TextBox x:Name="CenaPoOsobiBox" Margin="5" Width="300"/>
 
-        <Button Content="Sačuvaj" Grid.Row="4" Click="Save_Click" HorizontalAlignment="Right" Margin="0,10,10,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="Sačuvaj" Width="100" Margin="5" Click="Save_Click"/>
+                <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

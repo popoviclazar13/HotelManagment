@@ -30,6 +30,12 @@
             <ComboBox x:Name="ApartmentFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="ApartmentFilterComboBox_SelectionChanged">
                 <ComboBoxItem Content="Odaberite apartman"/>
             </ComboBox>
+            <ComboBox x:Name="SpratFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="SpratFilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="Odaberite sprat"/>
+            </ComboBox>
+            <ComboBox x:Name="KrevetiFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="KrevetFilterComboBox_SelectionChanged">
+                <ComboBoxItem Content="Odaberite broj kreveta"/>
+            </ComboBox>
             <!-- Filter po tipovima apartmana -->
             <ComboBox x:Name="TipApartmanaFilterComboBox" Width="150" Margin="0,0,10,0" SelectionChanged="TipApartmanaFilterComboBox_SelectionChanged">
                 <ComboBoxItem Content="Odaberite tip apartmana"/>

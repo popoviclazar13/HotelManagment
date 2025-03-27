@@ -31,6 +31,8 @@
             <TextBlock Text="Cena:" Margin="5"/>
             <TextBox x:Name="PriceTextBox" Margin="5" Width="300"/>
 
+            <CheckBox x:Name="PaidCheckBox" Content="Plaćeno" Margin="5"/>
+
             <!-- Način Plaćanja -->
             <TextBlock Text="Način Plaćanja:" Margin="5"/>
             <ComboBox x:Name="PaymentMethodComboBox" Margin="5" Width="300">

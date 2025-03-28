@@ -63,7 +63,7 @@
         <!-- DataGrid pomeren u Grid.Row="3", maksimalna visina 500 -->
         <DataGrid x:Name="RezervacijeDataGrid" Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
                   VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
-                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="3" MaxHeight="500">
+                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="3" MaxHeight="400">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Apartman" Width="150" Binding="{Binding apartman.nazivApartmana}" />
                 <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />

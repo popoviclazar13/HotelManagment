@@ -51,6 +51,14 @@ namespace HotelManagment.Service
 
         public async Task UpdateOprema(Oprema oprema)
         {
+            // Provera da li već postoji Oprema sa istim nazivom, ali različitim ID-jem
+            var existingOpremai = await _opremaRepository.GetAllAsync();
+            if (existingOpremai.Any(a => a.nazivOprema == oprema.nazivOprema && a.opremaId != oprema.opremaId))
+            {
+                throw new Exception("Oprema sa istim nazivom već postoji.");
+            }
+
+            // Ažuriranje opreme
             await _opremaRepository.UpdateAsync(oprema);
         }
     }

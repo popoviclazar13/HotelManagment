@@ -99,7 +99,7 @@ namespace HotelManagment.Pages
             AgencijaFilterComboBox.SelectedIndex = 0;
         }
 
-        private void FiltrirajRezervacije()
+        /*private void FiltrirajRezervacije()
         {
             var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
 
@@ -145,6 +145,84 @@ namespace HotelManagment.Pages
             // Calculate the total price
             double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna);
             UkupnaCenaTextBlock.Text = $"Ukupna cena: {ukupnaCena:F2} EUR";
+        }*/
+        private void FiltrirajRezervacije()
+        {
+            var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
+
+            // Filtriranje po Agenciji
+            var selectedAgencija = AgencijaFilterComboBox.SelectedItem as string;
+            if (selectedAgencija != null && selectedAgencija != "Odaberite agenciju")
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.agencija != null && r.agencija.nazivAgencije == selectedAgencija);
+            }
+
+            // Filtriranje po statusu plaćanja
+            var selectedPlaceno = PlacenoFilterComboBox.SelectedItem as ComboBoxItem;
+            if (selectedPlaceno != null && selectedPlaceno.Content.ToString() != "Odaberite status plaćanja")
+            {
+                bool placeno = selectedPlaceno.Content.ToString() == "Plaćeno";
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.placeno == placeno);
+            }
+
+            // Filtriranje po načinu plaćanja
+            var selectedNacinPlacanja = NacinPlacanjaFilterComboBox.SelectedItem as ComboBoxItem;
+            if (selectedNacinPlacanja != null && selectedNacinPlacanja.Content.ToString() != "Odaberite način plaćanja")
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.nacinPlacanja == selectedNacinPlacanja.Content.ToString());
+            }
+
+            // Filtriranje po osnovnom datumu (PocetniDatumPicker i KrajnjiDatumPicker)
+            DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
+            DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
+
+            if (pocetniDatum.HasValue && krajnjiDatum.HasValue)
+            {
+                // Filter po rasponu datuma
+                filtriraneRezervacije = filtriraneRezervacije.Where(r =>
+                    (r.pocetniDatum >= pocetniDatum && r.pocetniDatum <= krajnjiDatum) ||
+                    (r.krajnjiDatum >= pocetniDatum && r.krajnjiDatum <= krajnjiDatum) ||
+                    (r.pocetniDatum <= pocetniDatum && r.krajnjiDatum >= krajnjiDatum)
+                );
+            }
+            else if (pocetniDatum.HasValue)
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.pocetniDatum >= pocetniDatum);
+            }
+            else if (krajnjiDatum.HasValue)
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.krajnjiDatum <= krajnjiDatum);
+            }
+
+            // Filtriranje po dodatnim datumima (PocetniDatumRezervacijePicker i KrajnjiDatumRezervacijePicker)
+            DateTime? pocetniDatumRezervacije = PocetniDatumRezervacijePicker.SelectedDate;
+            DateTime? krajnjiDatumRezervacije = KrajnjiDatumRezervacijePicker.SelectedDate;
+
+            if (pocetniDatumRezervacije.HasValue && krajnjiDatumRezervacije.HasValue)
+            {
+                // Ako su oba datuma selektovana, filtriraj rezervacije koje imaju datum između
+                filtriraneRezervacije = filtriraneRezervacije.Where(r =>
+                    (r.pocetniDatum.Date == pocetniDatumRezervacije.Value.Date) ||
+                    (r.krajnjiDatum.Date == krajnjiDatumRezervacije.Value.Date)
+                );
+            }
+            else if (pocetniDatumRezervacije.HasValue)
+            {
+                // Filtriranje samo po početnom datumu rezervacije
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.pocetniDatum.Date == pocetniDatumRezervacije.Value.Date);
+            }
+            else if (krajnjiDatumRezervacije.HasValue)
+            {
+                // Filtriranje samo po krajnjem datumu rezervacije
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.krajnjiDatum.Date == krajnjiDatumRezervacije.Value.Date);
+            }
+
+            // Ažuriranje DataGrid-a sa filtriranim rezervacijama
+            RezervacijeDataGrid.ItemsSource = filtriraneRezervacije.ToList();
+
+            // Izračunavanje ukupne cene - treba da se ažurira svaki put kad se filtrira
+            double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna);
+            UkupnaCenaTextBlock.Text = $"Ukupna cena: {ukupnaCena:F2} EUR";
         }
 
 
@@ -183,6 +261,9 @@ namespace HotelManagment.Pages
             // Reset date pickers
             PocetniDatumPicker.SelectedDate = null;
             KrajnjiDatumPicker.SelectedDate = null;
+            //Reset date pickers
+            PocetniDatumRezervacijePicker.SelectedDate = null;
+            KrajnjiDatumRezervacijePicker.SelectedDate = null;
 
             // Refresh the reservation list without any filters applied
             FiltrirajRezervacije();
@@ -191,6 +272,51 @@ namespace HotelManagment.Pages
         {
             if (IsLoaded)
                 FiltrirajRezervacije();
+        }
+        private void PocetniDatumRezervacijePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*if (PocetniDatumRezervacijePicker.SelectedDate.HasValue)
+            {
+                DateTime selectedDate = PocetniDatumRezervacijePicker.SelectedDate.Value;
+                // Poziv metode za filtriranje rezervacija koje počinju na odabrani datum
+                _ = FilterReservationsByStartDate(selectedDate);
+            }*/
+            if (PocetniDatumRezervacijePicker.SelectedDate.HasValue)
+            {
+                DateTime selectedDate = PocetniDatumRezervacijePicker.SelectedDate.Value;
+                // Poziv metode za filtriranje rezervacija koje počinju na odabrani datum
+                FiltrirajRezervacije();
+            }
+        }
+
+        private void KrajnjiDatumRezervacijePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*if (KrajnjiDatumRezervacijePicker.SelectedDate.HasValue)
+            {
+                DateTime selectedDate = KrajnjiDatumRezervacijePicker.SelectedDate.Value;
+                // Poziv metode za filtriranje rezervacija koje se završavaju na odabrani datum
+                _ = FilterReservationsByEndDate(selectedDate);
+            }*/
+            if (KrajnjiDatumRezervacijePicker.SelectedDate.HasValue)
+            {
+                DateTime selectedDate = KrajnjiDatumRezervacijePicker.SelectedDate.Value;
+                // Poziv metode za filtriranje rezervacija koje se završavaju na odabrani datum
+                FiltrirajRezervacije();
+            }
+        }
+
+        private async Task FilterReservationsByStartDate(DateTime startDate)
+        {
+            // Logika za filtriranje rezervacija koje počinju na selectedDate
+            var filteredReservations = await _rezervacijaService.GetRezervacijeByPocetniDatum(startDate);
+            RezervacijeDataGrid.ItemsSource = filteredReservations;
+        }
+
+        private async Task FilterReservationsByEndDate(DateTime endDate)
+        {
+            // Logika za filtriranje rezervacija koje se završavaju na selectedDate
+            var filteredReservations = await _rezervacijaService.GetRezervacijeByKrajnjiDatum(endDate);
+            RezervacijeDataGrid.ItemsSource = filteredReservations;
         }
     }
 }

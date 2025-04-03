@@ -1,4 +1,5 @@
 ﻿using HotelManagment.Entitys;
+using HotelManagment.Service;
 using HotelManagment.ServiceRepository;
 using System;
 using System.Collections.Generic;

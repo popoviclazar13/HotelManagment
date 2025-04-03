@@ -60,10 +60,19 @@
             <DatePicker x:Name="KrajnjiDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
         </StackPanel>
 
-        <!-- DataGrid pomeren u Grid.Row="3", maksimalna visina 500 -->
+        <!-- Dva nova DatePicker-a za filtriranje prema početnom i krajnjem datumu rezervacije -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,10">
+            <TextBlock Text="Početak na datum:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <DatePicker x:Name="PocetniDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="PocetniDatumRezervacijePicker_SelectionChanged"/>
+
+            <TextBlock Text="Završava se na datum:" VerticalAlignment="Center" Margin="10,0,10,0"/>
+            <DatePicker x:Name="KrajnjiDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="KrajnjiDatumRezervacijePicker_SelectionChanged"/>
+        </StackPanel>
+
+        <!-- DataGrid pomeren u Grid.Row="4", maksimalna visina 500 -->
         <DataGrid x:Name="RezervacijeDataGrid" Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
                   VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
-                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="3" MaxHeight="400">
+                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="4" MaxHeight="400">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Apartman" Width="150" Binding="{Binding apartman.nazivApartmana}" />
                 <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />
@@ -78,8 +87,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Ukupna cena (Pomeren u Grid.Row="4") -->
-        <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="4" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,0,20">
+        <!-- Ukupna cena (Pomeren u Grid.Row="5") -->
+        <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,0,20">
             Ukupna cena: 0 EUR
         </TextBlock>
 

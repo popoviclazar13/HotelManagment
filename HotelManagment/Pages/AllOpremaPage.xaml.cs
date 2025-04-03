@@ -54,5 +54,10 @@ namespace HotelManagment.Pages
                 OpremaDataGrid.SelectedItem = null; // Resetovanje selekcije
             }
         }
+        private void AddOprema_Click(object sender, RoutedEventArgs e)
+        {
+            Action reloadDataAction = LoadOprema;
+            NavigationService.Navigate(new OpremaAddWindow(_opremaService, reloadDataAction));
+        }
     }
 }

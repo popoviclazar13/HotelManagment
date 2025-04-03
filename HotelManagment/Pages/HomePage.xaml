@@ -10,7 +10,6 @@
 
     <Grid>
         <!-- Navigacioni bar -->
-        <!-- Navigacioni bar -->
         <Grid VerticalAlignment="Top" Height="80">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -19,10 +18,10 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                <Button Content="Apartmani" Width="100" Height="50" FontSize="16" Margin="10"
+                <Button Content="Rezervacije" Width="120" Height="50" FontSize="16" Margin="10"
+                    Background="LightGray" Foreground="Black" Click="Rezervacije_Click"/>
+                <Button Content="Apartmani" Width="110" Height="50" FontSize="16" Margin="10"
                     Background="LightGray" Foreground="Black" Click="Apartmani_Click"/>
-                <Button Content="Rezervacije" Width="100" Height="50" FontSize="16" Margin="10"
-                        Background="LightGray" Foreground="Black" Click="Rezervacije_Click"/>
                 <Button Content="Usluge" Width="100" Height="50" FontSize="16" Margin="10"
                         Background="LightGray" Foreground="Black" Click="Usluge_Click"/>
                 <Button Content="Oprema" Width="100" Height="50" FontSize="16" Margin="10"
@@ -40,3 +39,4 @@
         </WrapPanel>
     </Grid>
 </Page>
+    

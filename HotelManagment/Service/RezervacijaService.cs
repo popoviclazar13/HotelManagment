@@ -2,6 +2,7 @@
 using HotelManagment.InterfaceRepository;
 using HotelManagment.Repository;
 using HotelManagment.ServiceRepository;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,18 @@ namespace HotelManagment.Service
         async Task<List<Rezervacija>> IRezervacijaService.GetRezervacijeByApartmanId(int id)
         {
             return await _rezervacijaRepository.GetAllAsync(r => r.apartmanId == id);
+        }
+
+        public async Task<List<Rezervacija>> GetRezervacijeByPocetniDatum(DateTime pocetniDatum)
+        {
+            // Pretpostavljamo da imamo repository metod koji vraća rezervacije koje počinju na datom datumu
+            return await _rezervacijaRepository.GetAllAsync(r => r.pocetniDatum.Date == pocetniDatum.Date);
+        }
+
+        public async Task<List<Rezervacija>> GetRezervacijeByKrajnjiDatum(DateTime krajnjiDatum)
+        {
+            // Pretpostavljamo da imamo repository metod koji vraća rezervacije koje se završavaju na datom datumu
+            return await _rezervacijaRepository.GetAllAsync(r => r.krajnjiDatum.Date == krajnjiDatum.Date);
         }
     }
 }

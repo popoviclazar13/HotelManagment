@@ -9,10 +9,23 @@
       Title="AllOpremaPage">
 
     <Grid>
-        <TextBlock Text="Lista Opreme" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+        <!-- Naslov centriran na vrhu -->
+        <TextBlock Text="Lista Opreme" FontSize="24" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" 
+                   Margin="0,20,0,0"/>
 
-        <!-- DataGrid za prikaz opreme -->
-        <DataGrid x:Name="OpremaDataGrid" Margin="20,60,20,20" MaxWidth="1250" HorizontalAlignment="Center" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="OpremaDataGrid_SelectionChanged">
+        <!-- Dugme u gornjem levom uglu -->
+        <Button Content="Dodaj opremu" Width="120" Height="30" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="20,60,0,0" Click="AddOprema_Click"/>
+
+        <!-- DataGrid centriran ispod naslova -->
+        <DataGrid x:Name="OpremaDataGrid"
+                  MaxWidth="1250" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" SelectionChanged="OpremaDataGrid_SelectionChanged"
+                  HorizontalAlignment="Center" VerticalAlignment="Top"
+                  Margin="0,100,0,0">
+            <!-- Pomereno na dole ispod naslova -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Naziv Opreme" Width="200" Binding="{Binding nazivOprema}">
                     <DataGridTextColumn.ElementStyle>

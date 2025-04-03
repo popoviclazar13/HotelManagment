@@ -16,16 +16,15 @@
                            HorizontalAlignment="Center" Margin="0,20,0,10"/>
 
                 <!-- Kapacitet -->
-                <TextBlock Text="Kapacitet:" FontWeight="Bold" Margin="5"/>
                 <TextBlock x:Name="ApartmentCapacity" Margin="5" FontSize="16"/>
 
                 <!-- Oprema -->
                 <TextBlock Text="Oprema:" FontWeight="Bold" Margin="5"/>
-                <ListView x:Name="EquipmentList" Margin="5" Width="200" Height="100"/>
+                <ListView x:Name="EquipmentList" Margin="5" Width="200" Height="80"/>
 
                 <!-- Cene apartmana -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Width="600">
+                    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Width="700">
 
                         <!-- Naslov tabele (unutar DataGrid-a) -->
                         <TextBlock Text="Cena Apartmana" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
@@ -37,10 +36,10 @@
                               SelectionMode="Single"
                               SelectionChanged="PriceList_SelectionChanged"
                               CanUserAddRows="False"
-                              Width="368">
+                              Width="400">
                                 <DataGrid.Columns>
                                     <!-- Naslovne kolone unutar tabele -->
-                                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                    <DataGridTextColumn Header="Datum Od" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -49,7 +48,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                    <DataGridTextColumn Header="Datum Do" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -58,7 +57,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Cena po noći" Binding="{Binding cenaPoNoci}" Width="90">
+                                    <DataGridTextColumn Header="Cena po noći" Binding="{Binding cenaPoNoci}" Width="110">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -67,7 +66,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Cena po osobi" Binding="{Binding cenaPoOsobi}" Width="90">
+                                    <DataGridTextColumn Header="Cena po osobi" Binding="{Binding cenaPoOsobi}" Width="110">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -96,10 +95,10 @@
                       SelectionMode="Single"
                       SelectionChanged="DiscountList_SelectionChanged"
                       CanUserAddRows="False"
-                      Width="348">
+                      Width="370">
                                 <DataGrid.Columns>
                                     <!-- Naslovne kolone unutar tabele -->
-                                    <DataGridTextColumn Header="Naziv Popusta" Binding="{Binding nazivPopusta}" Width="100">
+                                    <DataGridTextColumn Header="Naziv" Binding="{Binding nazivPopusta}" Width="100">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -108,7 +107,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Vrednost" Binding="{Binding vrednost}" Width="60">
+                                    <DataGridTextColumn Header="Vrednost" Binding="{Binding vrednost}" Width="90">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -117,7 +116,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                    <DataGridTextColumn Header="Datum Od" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -126,7 +125,7 @@
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
 
-                                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                    <DataGridTextColumn Header="Datum Do" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>
@@ -158,70 +157,69 @@
                       Width="Auto">
                                 <DataGrid.Columns>
                                     <!-- Naslovne kolone unutar tabele -->
-                                    <DataGridTextColumn Header="Početni Datum" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Krajnji Datum" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Broj Gostiju" Binding="{Binding brojGostiju}" Width="75">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Cena" Binding="{Binding cenaKonacna}" Width="50">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Način Plaćanja" Binding="{Binding nacinPlacanja}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Provizija" Binding="{Binding iznosProvizije}" Width="60">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
-                                    <DataGridTextColumn Header="Plaćeno" Binding="{Binding PlacenoTekst}" Width="55">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-
                                     <DataGridTextColumn Header="Ime Prezime" Binding="{Binding korisnik.imePrezime}" Width="150">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Datum Od" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Datum Do" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" Width="90">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Broj Gostiju" Binding="{Binding brojGostiju}" Width="100">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Cena" Binding="{Binding cenaKonacna}" Width="60">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Način Plaćanja" Binding="{Binding nacinPlacanja}" Width="120">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Provizija" Binding="{Binding iznosProvizije}" Width="80">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Plaćeno" Binding="{Binding PlacenoTekst}" Width="75">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="TextAlignment" Value="Center"/>

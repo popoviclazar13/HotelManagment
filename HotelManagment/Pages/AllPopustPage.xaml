@@ -22,21 +22,21 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Vrednost" Width="70" Binding="{Binding vrednost}">
+                <DataGridTextColumn Header="Vrednost" Width="90" Binding="{Binding vrednost}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Početni Datum" Width="100" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}">
+                <DataGridTextColumn Header="Početni Datum" Width="120" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Krajnji Datum" Width="100" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}">
+                <DataGridTextColumn Header="Krajnji Datum" Width="120" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="HorizontalAlignment" Value="Center"/>

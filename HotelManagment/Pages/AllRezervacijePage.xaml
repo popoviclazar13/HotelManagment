@@ -74,15 +74,15 @@
                   VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
                   SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="4" MaxHeight="400">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Apartman" Width="150" Binding="{Binding apartman.nazivApartmana}" />
+                <DataGridTextColumn Header="Apartman" Width="100" Binding="{Binding apartman.nazivApartmana}" />
                 <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />
-                <DataGridTextColumn Header="Datum Od" Width="120" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
-                <DataGridTextColumn Header="Datum Do" Width="120" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
-                <DataGridTextColumn Header="Broj Gostiju" Width="70" Binding="{Binding brojGostiju}" />
-                <DataGridTextColumn Header="Cena" Width="50" Binding="{Binding cenaKonacna}" />
-                <DataGridTextColumn Header="Plaćeno" Width="55" Binding="{Binding PlacenoTekst}" />
-                <DataGridTextColumn Header="Način Plačanja" Width="90" Binding="{Binding nacinPlacanja}" />
-                <DataGridTextColumn Header="Provizija" Width="60" Binding="{Binding iznosProvizije}" />
+                <DataGridTextColumn Header="Datum Od" Width="100" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
+                <DataGridTextColumn Header="Datum Do" Width="100" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
+                <DataGridTextColumn Header="Broj Gostiju" Width="80" Binding="{Binding brojGostiju}" />
+                <DataGridTextColumn Header="Cena" Width="55" Binding="{Binding cenaKonacna}" />
+                <DataGridTextColumn Header="Plaćeno" Width="75" Binding="{Binding PlacenoTekst}" />
+                <DataGridTextColumn Header="Način Plačanja" Width="120" Binding="{Binding nacinPlacanja}" />
+                <DataGridTextColumn Header="Provizija" Width="80" Binding="{Binding iznosProvizije}" />
                 <DataGridTextColumn Header="Agencija" Width="150" Binding="{Binding agencija.nazivAgencije}" />
             </DataGrid.Columns>
         </DataGrid>

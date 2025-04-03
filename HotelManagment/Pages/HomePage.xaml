@@ -28,7 +28,7 @@
                         Background="LightGray" Foreground="Black" Click="Oprema_Click"/>
                 <Button Content="Popusti" Width="100" Height="50" FontSize="16" Margin="10"
                         Background="LightGray" Foreground="Black" Click="Popusti_Click"/>
-                <Button Content="Korisnci" Width="100" Height="50" FontSize="16" Margin="10"
+                <Button Content="Gosti" Width="100" Height="50" FontSize="16" Margin="10"
                     Background="LightGray" Foreground="Black" Click="Korisnici_Click"/>
             </StackPanel>
         </Grid>

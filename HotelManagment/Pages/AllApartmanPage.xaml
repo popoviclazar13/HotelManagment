@@ -65,12 +65,12 @@
                   VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
                    Grid.Row="3">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Naziv Apartmana" Width="120" Binding="{Binding nazivApartmana}" />
-                <DataGridTextColumn Header="Sprat" Width="50" Binding="{Binding brojSprata}" />
-                <DataGridTextColumn Header="Kapacitet" Width="70" Binding="{Binding ukupniKapacitet}" />
+                <DataGridTextColumn Header="Apartmana" Width="100" Binding="{Binding nazivApartmana}" />
+                <DataGridTextColumn Header="Sprat" Width="60" Binding="{Binding brojSprata}" />
+                <DataGridTextColumn Header="Kapacitet" Width="100" Binding="{Binding ukupniKapacitet}" />
                 <DataGridTextColumn Header="Zauzet" Width="70" Binding="{Binding zauzet}" />
-                <DataGridTextColumn Header="Slobodni Termini" Binding="{Binding SlobodniTermini}" Width="120" />
-                <DataGridTextColumn Header="Zauzeti Termini" Binding="{Binding ZauzetiTermini}" Width="120" />
+                <DataGridTextColumn Header="Slobodni Datumi" Binding="{Binding SlobodniTermini}" Width="130" />
+                <DataGridTextColumn Header="Zauzeti Datumi" Binding="{Binding ZauzetiTermini}" Width="130" />
             </DataGrid.Columns>
         </DataGrid>
 

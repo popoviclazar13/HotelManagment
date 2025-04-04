@@ -30,8 +30,10 @@ namespace HotelManagment.Pages
         private readonly IPopustService _popustService;
         private readonly ICenaApartmanaService _cenaApartmanaService;
         private readonly IApartmanPopustService _apartmanPopustService;
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        private readonly IUslugaService _uslugaService;
         private List<Rezervacija> _sveRezervacije = new List<Rezervacija>();
-        public AllRezervacijePage(IRezervacijaService rezervacijaService, IApartmanService apartmanService, IKorisnikService korisnikService, IAgencijaService agencijaService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService)
+        public AllRezervacijePage(IRezervacijaService rezervacijaService, IApartmanService apartmanService, IKorisnikService korisnikService, IAgencijaService agencijaService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
             _rezervacijaService = rezervacijaService;
@@ -41,6 +43,8 @@ namespace HotelManagment.Pages
             _popustService = popustService;
             _cenaApartmanaService = cenaApartmanaService;
             _apartmanPopustService = apartmanPopustService;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
+            _uslugaService = uslugaService;
             LoadRezervacije();
         }
         public async void LoadRezervacije()
@@ -248,7 +252,7 @@ namespace HotelManagment.Pages
         {
             // Assuming you have a page or dialog for creating a reservation.
             // Navigate to a page to create a new reservation.
-            NavigationService.Navigate(new CreateRezervacijaPage(_rezervacijaService, _korisnikService, _agencijaService, _apartmanService, _popustService, _cenaApartmanaService, _apartmanPopustService));
+            NavigationService.Navigate(new CreateRezervacijaPage(_rezervacijaService, _korisnikService, _agencijaService, _apartmanService, _popustService, _cenaApartmanaService, _apartmanPopustService, _rezervacijaUslugaService, _uslugaService));
         }
 
         private void OcistiFiltereButton_Click(object sender, RoutedEventArgs e)

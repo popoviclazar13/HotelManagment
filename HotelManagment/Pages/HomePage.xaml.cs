@@ -32,7 +32,8 @@ namespace HotelManagment.Pages
         private readonly IUslugaService _uslugaService;
         private readonly IOpremaService _opremaService;
         private readonly IApartmanPopustService _apartmanPopustService;
-        public HomePage(IZgradaService zgradaService, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IUslugaService uslugaService, IOpremaService opremaService, IApartmanPopustService apartmanPopustService)
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        public HomePage(IZgradaService zgradaService, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IUslugaService uslugaService, IOpremaService opremaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService)
         {
             InitializeComponent();
             _zgradaService = zgradaService;
@@ -45,6 +46,7 @@ namespace HotelManagment.Pages
             _uslugaService = uslugaService;
             _opremaService = opremaService;
             _apartmanPopustService = apartmanPopustService;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
             LoadBuildings();
         }
 
@@ -95,7 +97,7 @@ namespace HotelManagment.Pages
         }
         private void Rezervacije_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new AllRezervacijePage(_rezervacijaService, _apartmanService, _korisnikService, _agencijaService, _popustService, _cenaApartmanaService, _apartmanPopustService));
+            NavigationService?.Navigate(new AllRezervacijePage(_rezervacijaService, _apartmanService, _korisnikService, _agencijaService, _popustService, _cenaApartmanaService, _apartmanPopustService, _rezervacijaUslugaService, _uslugaService));
         }
         private void Usluge_Click(object sender, RoutedEventArgs e)
         {

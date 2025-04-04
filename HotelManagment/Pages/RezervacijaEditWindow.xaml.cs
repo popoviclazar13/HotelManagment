@@ -44,12 +44,13 @@ namespace HotelManagment.Pages
             StartDatePicker.SelectedDate = selectedReservation.pocetniDatum;
             EndDatePicker.SelectedDate = selectedReservation.krajnjiDatum;
             GuestCountComboBox.SelectedItem = selectedReservation.brojGostiju;
-            FinalPriceTextBox.Text = selectedReservation.cenaKonacna.ToString("F2");
+            PriceTextBox.Text = selectedReservation.cenaKonacna.ToString("F2");
             PaymentMethodComboBox.SelectedItem = PaymentMethodComboBox.Items
                 .Cast<ComboBoxItem>()
                 .FirstOrDefault(item => item.Content.ToString() == selectedReservation.nacinPlacanja);
             CommissionAmountTextBox.Text = selectedReservation.iznosProvizije.ToString("F2");
             PaidCheckBox.IsChecked = selectedReservation.placeno;
+            CommentTextBox.Text = selectedReservation.komentar;
 
             // Postavljanje selektovanih vrednosti za korisnika i agenciju
             UserComboBox.SelectedValue = selectedReservation.korisnik?.korisnikId;
@@ -82,10 +83,11 @@ namespace HotelManagment.Pages
             SelectedReservation.pocetniDatum = StartDatePicker.SelectedDate ?? SelectedReservation.pocetniDatum;
             SelectedReservation.krajnjiDatum = EndDatePicker.SelectedDate ?? SelectedReservation.krajnjiDatum;
             SelectedReservation.brojGostiju = (int)(GuestCountComboBox.SelectedItem ?? SelectedReservation.brojGostiju);
-            SelectedReservation.cenaKonacna = double.TryParse(FinalPriceTextBox.Text, out double cenaKonacna) ? cenaKonacna : SelectedReservation.cenaKonacna;
+            SelectedReservation.cenaKonacna = double.TryParse(PriceTextBox.Text, out double cenaKonacna) ? cenaKonacna : SelectedReservation.cenaKonacna;
             SelectedReservation.nacinPlacanja = (PaymentMethodComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             SelectedReservation.iznosProvizije = double.TryParse(CommissionAmountTextBox.Text, out double iznosProvizije) ? iznosProvizije : SelectedReservation.iznosProvizije;
             SelectedReservation.placeno = PaidCheckBox.IsChecked ?? SelectedReservation.placeno;
+            SelectedReservation.komentar = CommentTextBox.Text ?? SelectedReservation.komentar;
 
             // Postavljanje selektovanog korisnika i agencije
             SelectedReservation.korisnik = UserComboBox.SelectedItem as Korisnik;

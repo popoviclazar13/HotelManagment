@@ -19,13 +19,16 @@ namespace HotelManagment.Service
         }
         public async Task AddKorisnik(Korisnik korisnik)
         {
-            // Provera da li već postoji Korisnik sa istim imenom i prezimenom
+            // Provera da li već postoji Korisnik sa istim imenom, telefonom i emailom
             var existingKorisnik = await _korisnikRepository.GetAllAsync();
-            if (existingKorisnik.Any(a => a.imePrezime == korisnik.imePrezime))
+
+            // Provera za duplikat ime, telefon i email
+            if (existingKorisnik.Any(a => a.imePrezime == korisnik.imePrezime && a.telefon == korisnik.telefon && a.email == korisnik.email))
             {
-                throw new Exception("Apartman sa istim nazivom već postoji.");
+                throw new Exception("Korisnik sa istim imenom, brojem telefona i email-om već postoji.");
             }
 
+            // Ako ne postoji duplikat, nastavi sa dodavanjem korisnika
             await _korisnikRepository.AddAsync(korisnik);
         }
 

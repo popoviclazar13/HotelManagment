@@ -29,8 +29,10 @@ namespace HotelManagment.Pages
         private readonly IPopustService _popustService;
         private readonly ICenaApartmanaService _cenaApartmanaService;
         private readonly IApartmanPopustService _apartmanPopustService;
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        private readonly IUslugaService _uslugaService;
 
-        public CreateRezervacijaPage(IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService)
+        public CreateRezervacijaPage(IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
             _rezervacijaService = rezervacijaService;
@@ -40,6 +42,8 @@ namespace HotelManagment.Pages
             _popustService = popustService;
             _cenaApartmanaService = cenaApartmanaService;
             _apartmanPopustService = apartmanPopustService;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
+            _uslugaService = uslugaService;
             LoadComboBoxData();
         }
         private async void LoadComboBoxData()
@@ -54,6 +58,9 @@ namespace HotelManagment.Pages
 
                 var apartmani = await _apartmanService.GetAllApartman();
                 ApartmentComboBox.ItemsSource = apartmani;
+
+                var usluge = await _uslugaService.GetAllUsluga();
+                ServicesComboBox.ItemsSource = usluge;
             }
             catch (Exception ex)
             {
@@ -166,13 +173,31 @@ namespace HotelManagment.Pages
                 cenaKonacna = konacnaCena, // Postavljanje konačne cene
                 iznosProvizije = 0, // Ako se primenjuje provizija
                 placeno = PaidCheckBox.IsChecked ?? false,
-                komentar = ""
+                komentar = CommentTextBox.Text
             };
 
             try
             {
                 await _rezervacijaService.AddRezervacija(newRezervacija);
+                // Prolazimo kroz sve selektovane usluge i dodajemo torke u RezervacijaUsluga
+                var selectedServices = ServicesComboBox.SelectedItems.Cast<Usluga>().ToList();
+
+                foreach (var service in selectedServices)
+                {
+                    var rezervacijaUsluga = new RezervacijaUsluga
+                    {
+                        rezervacijaId = newRezervacija.rezervacijaId,
+                        uslugaId = service.uslugaId,
+                        kolicina = 0,
+                        datum = DateTime.Now
+                    };
+
+                    // Kreiranje torke u bazi za svaku uslugu
+                    await _rezervacijaUslugaService.AddRezervacijaUsluga(rezervacijaUsluga);
+                }
+
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 // Pozivanje metode za osvežavanje rezervacija ako postoji
                 if (NavigationService.Content is AllRezervacijePage rezervacijePage)
                 {
@@ -207,6 +232,11 @@ namespace HotelManagment.Pages
         private void EndDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             PostaviCenuApartmana(); // Pozivanje metode da se ažurira cena prilikom promene datuma
+        }
+        private void AddGuestButton_Click(object sender, RoutedEventArgs e)
+        {
+            Action reloadDataAction = LoadComboBoxData;
+            NavigationService.Navigate(new CreateGostPage(_korisnikService, reloadDataAction)); // ili naziv tvoje stranice
         }
 
         private void LoadGuestCountComboBox()

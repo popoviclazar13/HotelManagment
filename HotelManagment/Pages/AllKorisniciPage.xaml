@@ -12,7 +12,7 @@
         <TextBlock Text="Lista Gostiju" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
         <!-- DataGrid za prikaz korisnika -->
-        <DataGrid x:Name="KorisniciDataGrid" Margin="20,60,20,20" MaxWidth="1250" HorizontalAlignment="Center" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="KorisniciDataGrid_SelectionChanged">
+        <DataGrid x:Name="KorisniciDataGrid" Margin="20,60,20,20" MaxWidth="1250" MaxHeight="500" HorizontalAlignment="Center" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="KorisniciDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Ime i Prezime" Width="200" Binding="{Binding imePrezime}">
                     <DataGridTextColumn.ElementStyle>

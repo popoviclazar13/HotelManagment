@@ -67,8 +67,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Apartmana" Width="100" Binding="{Binding nazivApartmana}" />
                 <DataGridTextColumn Header="Sprat" Width="60" Binding="{Binding brojSprata}" />
-                <DataGridTextColumn Header="Kapacitet" Width="100" Binding="{Binding ukupniKapacitet}" />
-                <DataGridTextColumn Header="Zauzet" Width="70" Binding="{Binding zauzet}" />
+                <DataGridTextColumn Header="Kapacitet" Width="85" Binding="{Binding ukupniKapacitet}" />
                 <DataGridTextColumn Header="Slobodni Datumi" Binding="{Binding SlobodniTermini}" Width="130" />
                 <DataGridTextColumn Header="Zauzeti Datumi" Binding="{Binding ZauzetiTermini}" Width="130" />
             </DataGrid.Columns>

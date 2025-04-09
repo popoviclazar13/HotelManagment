@@ -27,6 +27,16 @@ namespace HotelManagment.Pages
         }
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            // Provera da li je trenutni datum veći od 1. septembra tekuće godine
+            DateTime today = DateTime.Today;
+            DateTime cutoffDate = new DateTime(today.Year, 9, 1);
+
+            if (today >= cutoffDate)
+            {
+                MessageBox.Show("Obratite se administratoru.", "Pristup onemogućen", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             // Provera šifre
             if (PasswordBox.Password == "vilabojana123")
             {
@@ -38,7 +48,7 @@ namespace HotelManagment.Pages
                 catch (InvalidOperationException ex)
                 {
                     // Ako servis nije registrovan, prikazivanje greške
-                   MessageBox.Show($"Greška: {ex.Message}", "Greška u navigaciji", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Greška: {ex.Message}", "Greška u navigaciji", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else

@@ -27,9 +27,10 @@ namespace HotelManagment.Pages
         private readonly IRezervacijaService _rezervacijaService;
         private readonly IKorisnikService _korisnikService;
         private readonly IAgencijaService _agencijaService;
+        private readonly IApartmanService _apartmanService;
         public Rezervacija SelectedReservation { get; set; }
         private readonly Action _reloadDataAction;
-        public RezervacijaEditWindow(IRezervacijaService rezervacijaService, Rezervacija selectedReservation, Action reloadDataAction, IKorisnikService korisnikService, IAgencijaService agencijaService)
+        public RezervacijaEditWindow(IRezervacijaService rezervacijaService, Rezervacija selectedReservation, Action reloadDataAction, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService)
         {
             InitializeComponent();
             _rezervacijaService = rezervacijaService;
@@ -37,6 +38,7 @@ namespace HotelManagment.Pages
             _agencijaService = agencijaService;
             SelectedReservation = selectedReservation;
             _reloadDataAction = reloadDataAction;
+            _apartmanService = apartmanService;
             LoadComboBoxData();
             LoadGuestCountComboBox();
 
@@ -55,7 +57,7 @@ namespace HotelManagment.Pages
             // Postavljanje selektovanih vrednosti za korisnika i agenciju
             UserComboBox.SelectedValue = selectedReservation.korisnik?.korisnikId;
             AgencyComboBox.SelectedValue = selectedReservation.agencija?.agencijaId;
-
+            _apartmanService = apartmanService;
         }
         private async void LoadComboBoxData()
         {
@@ -69,9 +71,14 @@ namespace HotelManagment.Pages
                 AgencyComboBox.ItemsSource = agencije;
                 Debug.WriteLine($"Učitaj agencije: {agencije.Count()}");
 
+                var apartmani = await _apartmanService.GetAllApartman();
+                ApartmanComboBox.ItemsSource = apartmani;
+                Debug.WriteLine($"Učitaj apartmane: {apartmani.Count()}");
+
                 // Sada kada su podaci učitani, postavi selektovane vrednosti
                 UserComboBox.SelectedValue = SelectedReservation.korisnik?.korisnikId;
                 AgencyComboBox.SelectedValue = SelectedReservation.agencija?.agencijaId;
+                ApartmanComboBox.SelectedValue = SelectedReservation.apartman?.apartmanId;
             }
             catch (Exception ex)
             {
@@ -92,6 +99,7 @@ namespace HotelManagment.Pages
             // Postavljanje selektovanog korisnika i agencije
             SelectedReservation.korisnik = UserComboBox.SelectedItem as Korisnik;
             SelectedReservation.agencija = AgencyComboBox.SelectedItem as Agencija;
+            SelectedReservation.apartman = ApartmanComboBox.SelectedItem as Apartman;
 
             try
             {
@@ -110,6 +118,41 @@ namespace HotelManagment.Pages
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
+        }
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteReservationAsync();
+        }
+        private async Task DeleteReservationAsync()
+        {
+            // Prikazivanje potvrde za brisanje
+            var result = MessageBox.Show("Da li ste sigurni da želite da obrišete ovu rezervaciju?",
+                                         "Potvrda brisanja",
+                                         MessageBoxButton.YesNo,
+                                         MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    // Pozivanje metode za brisanje rezervacije
+                    await _rezervacijaService.DeleteRezervacija(SelectedReservation.rezervacijaId);
+                    MessageBox.Show("Rezervacija je uspešno obrisana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Poziv za reload podataka nakon brisanja
+                    _reloadDataAction();
+                    NavigationService.GoBack();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Došlo je do greške pri brisanju rezervacije: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                // Ako korisnik otkaže brisanje, jednostavno se vraća na prethodnu stranu
+                NavigationService.GoBack();
+            }
         }
         private void LoadGuestCountComboBox()
         {

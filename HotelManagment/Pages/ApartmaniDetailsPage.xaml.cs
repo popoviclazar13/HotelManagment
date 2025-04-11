@@ -117,7 +117,7 @@ namespace HotelManagment.Pages
             if (ReservationList.SelectedItem is Rezervacija selectedReservation && selectedReservation.rezervacijaId > 0)
             {
                 Action reloadDataAction = LoadApartmanDetails; // ili neka druga metoda za ponovno učitavanje podataka, ako je potrebno
-                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedReservation, reloadDataAction, _korisnikService, _agencijaService));
+                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedReservation, reloadDataAction, _korisnikService, _agencijaService, _apartmanService));
                 ReservationList.SelectedItem = null; // Resetovanje selekcije
             }
         }

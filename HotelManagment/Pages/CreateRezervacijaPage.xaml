@@ -8,104 +8,116 @@
       d:DesignHeight="528" d:DesignWidth="800"
       Title="CreateRezervacijaPage">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">
-        <!-- Naslov -->
-        <TextBlock Text="Kreiranje Rezervacije" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">
+            <!-- Naslov -->
+            <TextBlock Text="Kreiranje Rezervacije" FontSize="24" HorizontalAlignment="Center"/>
 
-        <Grid Margin="0,20,0,0" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <!-- Grid sa 3 kolone -->
+            <Grid Margin="0,20,0,0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Prva kolona -->
-            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10">
-                <!-- Početni Datum -->
-                <TextBlock Text="Početni Datum:" Margin="5"/>
-                <DatePicker x:Name="StartDatePicker" Margin="5" SelectedDateChanged="StartDatePicker_SelectedDateChanged" Width="250"/>
+                <!-- Prva kolona -->
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Početni Datum:" Margin="5"/>
+                    <DatePicker x:Name="StartDatePicker" Margin="5" SelectedDateChanged="StartDatePicker_SelectedDateChanged" Width="250"/>
 
-                <!-- Broj Gostiju -->
-                <TextBlock Text="Broj Gostiju:" Margin="5"/>
-                <ComboBox x:Name="GuestCountComboBox" Margin="5" Width="250"/>
+                    <TextBlock Text="Broj Gostiju:" Margin="5"/>
+                    <ComboBox x:Name="GuestCountComboBox" Margin="5" Width="250"/>
 
-                <!-- Cena -->
-                <TextBlock Text="Cena:" Margin="5"/>
-                <TextBox x:Name="PriceTextBox" Margin="5" Width="250"/>
+                    <TextBlock Text="Cena:" Margin="5"/>
+                    <TextBox x:Name="PriceTextBox" Margin="5" Width="250"/>
+                    
+                    <TextBlock Text="Provizija:" Margin="5"/>
+                    <TextBox x:Name="CommissionAmountTextBox" Margin="5" Width="250"/>
 
-                <!-- Korisnik -->
-                <TextBlock Text="Korisnik:" Margin="5"/>
-                <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="PaidCheckBox" Content="Plaćeno" Margin="5"/>
+                </StackPanel>
 
-                    <ComboBox x:Name="UserComboBox"
-                        DisplayMemberPath="imePrezime"
-                        SelectedValuePath="korisnikId"
-                        Width="220"
-                        Grid.Column="0"
-                        MaxDropDownHeight="150"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                <!-- Druga kolona -->
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Margin="10">
+                    <TextBlock Text="Krajnji Datum:" Margin="5"/>
+                    <DatePicker x:Name="EndDatePicker" Margin="5" SelectedDateChanged="EndDatePicker_SelectedDateChanged" Width="250"/>
 
-                    <Button Content="+"  Margin="5,0,0,0" Grid.Column="1"
-                        FontWeight="Bold"
-                            FontSize="12"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        Click="AddGuestButton_Click"/>
-                </Grid>
+                    <TextBlock Text="Način Plaćanja:" Margin="5"/>
+                    <ComboBox x:Name="PaymentMethodComboBox" Margin="5" Width="250">
+                        <ComboBoxItem Content="Keš"/>
+                        <ComboBoxItem Content="Kartica"/>
+                    </ComboBox>
 
-                <!-- Način Plaćanja -->
-                <TextBlock Text="Način Plaćanja:" Margin="5"/>
-                <ComboBox x:Name="PaymentMethodComboBox" Margin="5" Width="250">
-                    <ComboBoxItem Content="Keš"/>
-                    <ComboBoxItem Content="Kartica"/>
-                </ComboBox>
+                    <TextBlock Text="Usluge:" Margin="5"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="125">
+                        <ListBox x:Name="ServicesComboBox" Margin="5" Width="250" SelectionMode="Multiple">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding nazivUsluge}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
 
-                <!-- Plaćeno -->
-                <CheckBox x:Name="PaidCheckBox" Content="Plaćeno" Margin="5"/>
+                </StackPanel>
 
+                <!-- Treća kolona -->
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="2" Margin="10">
+                    <TextBlock Text="Korisnik:" Margin="5"/>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox x:Name="UserComboBox"
+                            DisplayMemberPath="imePrezime"
+                            SelectedValuePath="korisnikId"
+                            Width="220"
+                            MaxDropDownHeight="150"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+                        <Button Content="+" Margin="5,0,0,0" Grid.Column="1"
+                            FontWeight="Bold" FontSize="12"
+                            Click="AddGuestButton_Click"/>
+                    </Grid>
+
+                    <TextBlock Text="Apartman:" Margin="5"/>
+                    <ComboBox x:Name="ApartmentComboBox" DisplayMemberPath="nazivApartmana" SelectedValuePath="apartmanId"
+                              SelectionChanged="ApartmentComboBox_SelectionChanged"
+                              Width="250" MaxDropDownHeight="150"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+                    <TextBlock Text="Agencija:" Margin="5"/>
+                    <ComboBox x:Name="AgencyComboBox" Margin="5" DisplayMemberPath="nazivAgencije" SelectedValuePath="agencijaId" Width="250"/>
+
+                    <TextBlock Text="Popust:" Margin="5"/>
+                    <ComboBox x:Name="DiscountComboBox" Margin="5" Width="250" SelectionChanged="DiscountComboBox_SelectionChanged">
+                        <ComboBoxItem Content="5%" />
+                        <ComboBoxItem Content="10%" />
+                        <ComboBoxItem Content="15%" />
+                        <ComboBoxItem Content="20%" />
+                        <ComboBoxItem Content="25%" />
+                        <ComboBoxItem Content="30%" />
+                    </ComboBox>
+
+                </StackPanel>
+            </Grid>
+
+            <!-- Komentar i dugmad -->
+            <StackPanel Orientation="Vertical" Margin="0,20,0,0" HorizontalAlignment="Center">
+                <TextBlock Text="Komentar:" Margin="10,5"/>
+                <TextBox x:Name="CommentTextBox" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                         Height="100" Width="400" Margin="10"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,10,10,40">
+                    <Button Content="Kreiraj" Width="100" Margin="5" Click="CreateButton_Click"/>
+                    <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
+                </StackPanel>
             </StackPanel>
-
-            <!-- Druga kolona -->
-            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Column="1" Margin="10">
-                <!-- Krajnji Datum -->
-                <TextBlock Text="Krajnji Datum:" Margin="5"/>
-                <DatePicker x:Name="EndDatePicker" Margin="5" SelectedDateChanged="EndDatePicker_SelectedDateChanged" Width="250"/>
-
-                <!-- Apartman -->
-                <TextBlock Text="Apartman:" Margin="5"/>
-                <ComboBox x:Name="ApartmentComboBox" DisplayMemberPath="nazivApartmana" SelectedValuePath="apartmanId" SelectionChanged="ApartmentComboBox_SelectionChanged" Width="250" MaxDropDownHeight="150"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
-
-                <!-- Agencija -->
-                <TextBlock Text="Agencija:" Margin="5"/>
-                <ComboBox x:Name="AgencyComboBox" Margin="5" DisplayMemberPath="nazivAgencije" SelectedValuePath="agencijaId" Width="250"/>
-
-                <TextBlock Text="Usluge:" Margin="5"/>
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Height="125">
-                    <ListBox x:Name="ServicesComboBox" Margin="5" Width="250" SelectionMode="Multiple">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding nazivUsluge}" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </ScrollViewer>
-
-            </StackPanel>
-        </Grid>
-
-        <TextBlock Text="Komentar:" Margin="10, 10, 10, 10"/>
-        <TextBox x:Name="CommentTextBox" Margin="0, 0, 10, 20" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" Width="500"/>
-
-        <!-- Dugme za Kreiranje -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10, 00, 10, 40" VerticalAlignment="Bottom">
-            <Button Content="Kreiraj" Width="100" Margin="5" Click="CreateButton_Click"/>
-            <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
         </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Page>

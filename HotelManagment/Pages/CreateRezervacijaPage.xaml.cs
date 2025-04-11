@@ -31,8 +31,9 @@ namespace HotelManagment.Pages
         private readonly IApartmanPopustService _apartmanPopustService;
         private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
         private readonly IUslugaService _uslugaService;
+        private readonly Action _reloadDataAction;
 
-        public CreateRezervacijaPage(IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
+        public CreateRezervacijaPage(IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService, Action reloadDataAction)
         {
             InitializeComponent();
             _rezervacijaService = rezervacijaService;
@@ -44,6 +45,7 @@ namespace HotelManagment.Pages
             _apartmanPopustService = apartmanPopustService;
             _rezervacijaUslugaService = rezervacijaUslugaService;
             _uslugaService = uslugaService;
+            _reloadDataAction = reloadDataAction;
             LoadComboBoxData();
         }
         private async void LoadComboBoxData()
@@ -51,7 +53,7 @@ namespace HotelManagment.Pages
             try
             {
                 var korisnici = await _korisnikService.GetAllKorisnik();
-                UserComboBox.ItemsSource = korisnici;
+                UserComboBox.ItemsSource = korisnici.OrderByDescending(k => k.korisnikId).ToList();
 
                 var agencije = await _agencijaService.GetAllAgencija();
                 AgencyComboBox.ItemsSource = agencije;
@@ -68,61 +70,6 @@ namespace HotelManagment.Pages
             }
         }
 
-        /*private async void CreateButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
-            {
-                MessageBox.Show("Molimo unesite datume!", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (ApartmentComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Molimo izaberite apartman!", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (UserComboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Molimo izaberite korisnika!", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            var selectedApartment = ApartmentComboBox.SelectedItem as Apartman;
-            var selectedUser = UserComboBox.SelectedItem as Korisnik;
-            var selectedAgency = AgencyComboBox.SelectedItem as Agencija;
-            var selectedPayment = (PaymentMethodComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-
-            var newRezervacija = new Rezervacija
-            {
-                pocetniDatum = StartDatePicker.SelectedDate.Value,
-                krajnjiDatum = EndDatePicker.SelectedDate.Value,
-                brojGostiju = (int)(GuestCountComboBox.SelectedItem ?? 1),
-                nacinPlacanja = selectedPayment ?? "Keš", // Default na keš ako nije izabrano
-
-                // Povezivanje sa apartmanom i korisnikom
-                apartmanId = selectedApartment.apartmanId,
-                korisnikId = selectedUser.korisnikId,
-                agencijaId = selectedAgency?.agencijaId, // Može biti null
-
-                // Ostale vrednosti (treba ih dodatno obračunati)
-                ukupnaCena = 0,  // Treba izračunati
-                cenaKonacna = 0, // Treba izračunati
-                iznosProvizije = 0, // Ako se primenjuje provizija
-                placeno = false,
-                komentar = ""
-            };
-
-            try
-            {
-                await _rezervacijaService.AddRezervacija(newRezervacija);
-                MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Došlo je do greške: {ex.Message}\nDetalji: {ex.InnerException?.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }*/
         private async void CreateButton_Click(object sender, RoutedEventArgs e)
         {
             if (StartDatePicker.SelectedDate == null || EndDatePicker.SelectedDate == null)
@@ -155,6 +102,13 @@ namespace HotelManagment.Pages
                 MessageBox.Show("Molimo unesite validnu cenu!", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            double provizija;
+            if (!double.TryParse(CommissionAmountTextBox.Text, out provizija))
+            {
+                // Ako nije validan broj, možeš da prikažeš poruku ili podesiš vrednost na 0
+                MessageBox.Show("Molimo unesite validan iznos provizije!", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                provizija = 0; // Postavi vrednost na 0 ako unos nije validan
+            }
 
             var newRezervacija = new Rezervacija
             {
@@ -171,9 +125,9 @@ namespace HotelManagment.Pages
                 // Ostale vrednosti (treba ih dodatno obračunati)
                 ukupnaCena = konacnaCena,  // Postavljanje konačne cene
                 cenaKonacna = konacnaCena, // Postavljanje konačne cene
-                iznosProvizije = 0, // Ako se primenjuje provizija
+                iznosProvizije = provizija, // Ako se primenjuje provizija
                 placeno = PaidCheckBox.IsChecked ?? false,
-                komentar = CommentTextBox.Text
+                komentar = CommentTextBox.Text,
             };
 
             try
@@ -197,6 +151,7 @@ namespace HotelManagment.Pages
                 }
 
                 MessageBox.Show("Rezervacija je uspešno kreirana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+                _reloadDataAction();
 
                 // Pozivanje metode za osvežavanje rezervacija ako postoji
                 if (NavigationService.Content is AllRezervacijePage rezervacijePage)
@@ -237,6 +192,11 @@ namespace HotelManagment.Pages
         {
             Action reloadDataAction = LoadComboBoxData;
             NavigationService.Navigate(new CreateGostPage(_korisnikService, reloadDataAction)); // ili naziv tvoje stranice
+        }
+        private void DiscountComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Pozivanje postojeće metode koja računa cenu sa popustom
+            PostaviCenuApartmana();
         }
 
         private void LoadGuestCountComboBox()
@@ -308,25 +268,24 @@ namespace HotelManagment.Pages
 
                         ukupnaCena += cenaZaTajPeriod;
                     }
+                    // Dobijanje popusta iz ComboBoxa
+                    string selectedDiscountText = (DiscountComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                    double popustProcenat = 0;
 
-                    // Dohvatanje primenljivih popusta
-                    var allPopusti = await _popustService.GetAllPopust();
-                    var relevantPopust = allPopusti
-                        .Where(p => p.pocetniDatum <= datumDo && p.krajnjiDatum >= datumOd)  // Popust koji se poklapa sa periodom rezervacije
-                        .FirstOrDefault();
-
-                    // Prikazivanje popusta
-                    if (relevantPopust != null)
+                    // Ako je odabrana vrednost popusta u ComboBoxu, pretvori je u broj
+                    if (!string.IsNullOrEmpty(selectedDiscountText) && double.TryParse(selectedDiscountText.TrimEnd('%'), out popustProcenat))
                     {
-                        MessageBox.Show($"Popust primenjen: {relevantPopust.vrednost}%", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Ako je validan popust, pretvori ga u decimalnu vrednost
+                        popustProcenat /= 100;
+                        MessageBox.Show($"Popust primenjen: {popustProcenat * 100}%", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
                         MessageBox.Show("Nema popusta za izabrani period.", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
 
-                    double popustProcenat = relevantPopust?.vrednost ?? 0;  // Ako nije pronađen popust, vrednost će biti 0
-                    double iznosPopusta = ukupnaCena * (popustProcenat / 100);
+                    // Računanje cene sa popustom
+                    double iznosPopusta = ukupnaCena * popustProcenat;
                     double konacnaCena = ukupnaCena - iznosPopusta;
 
                     // Ažuriranje polja sa finalnom cenom

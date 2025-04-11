@@ -66,7 +66,7 @@ namespace HotelManagment.Pages
             if (RezervacijeDataGrid.SelectedItem is Rezervacija selectedRezervacija && selectedRezervacija.rezervacijaId > 0)
             {
                 Action reloadDataAction = LoadRezervacije; // ili neka druga metoda za ponovno učitavanje podataka, ako je potrebno
-                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedRezervacija, reloadDataAction, _korisnikService, _agencijaService));
+                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedRezervacija, reloadDataAction, _korisnikService, _agencijaService, _apartmanService));
                 RezervacijeDataGrid.SelectedItem = null; // Resetovanje selekcije
             }
         }
@@ -102,54 +102,6 @@ namespace HotelManagment.Pages
             // Set the default selected index
             AgencijaFilterComboBox.SelectedIndex = 0;
         }
-
-        /*private void FiltrirajRezervacije()
-        {
-            var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
-
-            // Filtriranje po Agenciji
-            var selectedAgencija = AgencijaFilterComboBox.SelectedItem as string;
-            if (selectedAgencija != null && selectedAgencija != "Odaberite agenciju")
-            {
-                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.agencija != null && r.agencija.nazivAgencije == selectedAgencija);
-            }
-
-            // Filtriranje po statusu plaćanja
-            var selectedPlaceno = PlacenoFilterComboBox.SelectedItem as ComboBoxItem;
-            if (selectedPlaceno != null && selectedPlaceno.Content.ToString() != "Odaberite status plaćanja")
-            {
-                bool placeno = selectedPlaceno.Content.ToString() == "Plaćeno";
-                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.placeno == placeno);
-            }
-
-            // Filtriranje po načinu plaćanja
-            var selectedNacinPlacanja = NacinPlacanjaFilterComboBox.SelectedItem as ComboBoxItem;
-            if (selectedNacinPlacanja != null && selectedNacinPlacanja.Content.ToString() != "Odaberite način plaćanja")
-            {
-                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.nacinPlacanja == selectedNacinPlacanja.Content.ToString());
-            }
-
-            // Filtriranje po datumu
-            DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
-            DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
-
-            if (pocetniDatum.HasValue && krajnjiDatum.HasValue)
-            {
-                // Filter reservations based on the selected date range
-                filtriraneRezervacije = filtriraneRezervacije.Where(r =>
-                    (r.pocetniDatum >= pocetniDatum && r.pocetniDatum <= krajnjiDatum) ||
-                    (r.krajnjiDatum >= pocetniDatum && r.krajnjiDatum <= krajnjiDatum) ||
-                    (r.pocetniDatum <= pocetniDatum && r.krajnjiDatum >= krajnjiDatum)
-                );
-            }
-
-            // Update the DataGrid with the filtered reservations
-            RezervacijeDataGrid.ItemsSource = filtriraneRezervacije.ToList();
-
-            // Calculate the total price
-            double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna);
-            UkupnaCenaTextBlock.Text = $"Ukupna cena: {ukupnaCena:F2} EUR";
-        }*/
         private void FiltrirajRezervacije()
         {
             var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
@@ -226,7 +178,15 @@ namespace HotelManagment.Pages
 
             // Izračunavanje ukupne cene - treba da se ažurira svaki put kad se filtrira
             double ukupnaCena = filtriraneRezervacije.Sum(r => r.cenaKonacna);
-            UkupnaCenaTextBlock.Text = $"Ukupna cena: {ukupnaCena:F2} EUR";
+
+            // Izračunavanje ukupne provizije
+            double ukupnaProvizija = filtriraneRezervacije.Sum(r => r.iznosProvizije); // pretpostavljam da postoji atribut provizija
+
+            // Izračunavanje bruto cene (Ukupna cena - ukupna provizija)
+            double brutoCena = ukupnaCena - ukupnaProvizija;
+
+            UkupnaCenaTextBlock.Text = $"Neto cena: {ukupnaCena:F2} EUR";
+            BrutoCenaTextBlock.Text = $"Bruto cena: {brutoCena:F2} EUR";
         }
 
 
@@ -252,7 +212,8 @@ namespace HotelManagment.Pages
         {
             // Assuming you have a page or dialog for creating a reservation.
             // Navigate to a page to create a new reservation.
-            NavigationService.Navigate(new CreateRezervacijaPage(_rezervacijaService, _korisnikService, _agencijaService, _apartmanService, _popustService, _cenaApartmanaService, _apartmanPopustService, _rezervacijaUslugaService, _uslugaService));
+            Action reloadDataAction = LoadRezervacije;
+            NavigationService.Navigate(new CreateRezervacijaPage(_rezervacijaService, _korisnikService, _agencijaService, _apartmanService, _popustService, _cenaApartmanaService, _apartmanPopustService, _rezervacijaUslugaService, _uslugaService, reloadDataAction));
         }
 
         private void OcistiFiltereButton_Click(object sender, RoutedEventArgs e)

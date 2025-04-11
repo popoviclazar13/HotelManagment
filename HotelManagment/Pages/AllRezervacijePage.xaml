@@ -78,7 +78,7 @@
                 <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />
                 <DataGridTextColumn Header="Datum Od" Width="100" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
                 <DataGridTextColumn Header="Datum Do" Width="100" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
-                <DataGridTextColumn Header="Broj Gostiju" Width="80" Binding="{Binding brojGostiju}" />
+                <DataGridTextColumn Header="Broj Gostiju" Width="100" Binding="{Binding brojGostiju}" />
                 <DataGridTextColumn Header="Cena" Width="55" Binding="{Binding cenaKonacna}" />
                 <DataGridTextColumn Header="Plaćeno" Width="75" Binding="{Binding PlacenoTekst}" />
                 <DataGridTextColumn Header="Način Plačanja" Width="120" Binding="{Binding nacinPlacanja}" />
@@ -89,7 +89,10 @@
 
         <!-- Ukupna cena (Pomeren u Grid.Row="5") -->
         <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,0,20">
-            Ukupna cena: 0 EUR
+            Neto cena: 0 EUR
+        </TextBlock>
+        <TextBlock x:Name="BrutoCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,500,20">
+            Bruto cena: 0 EUR
         </TextBlock>
 
     </Grid>

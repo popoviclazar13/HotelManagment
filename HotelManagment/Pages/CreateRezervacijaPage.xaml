@@ -116,6 +116,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,10,10,40">
                     <Button Content="Kreiraj" Width="100" Margin="5" Click="CreateButton_Click"/>
                     <Button Content="Nazad" Width="100" Margin="5" Click="CancelButton_Click"/>
+                    <Button Content="Učitaj rezervacije" Width="120" Margin="250,5,5,5" Click="LoadButton_Click"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

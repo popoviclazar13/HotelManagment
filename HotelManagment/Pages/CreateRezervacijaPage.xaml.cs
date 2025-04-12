@@ -1,7 +1,9 @@
 ﻿using HotelManagment.Entitys;
 using HotelManagment.ServiceRepository;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -207,6 +209,123 @@ namespace HotelManagment.Pages
                 int maxKapacitet = selectedApartman.kapacitetDeca + selectedApartman.kapacitetOdrasli;
                 GuestCountComboBox.ItemsSource = Enumerable.Range(1, maxKapacitet); // Brojevi od 1 do maxKapacitet
                 GuestCountComboBox.SelectedItem = 1; // Postavi početnu vrednost na 1
+            }
+        }
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Navigate back to the previous page
+            ImportFromExcel_Click();
+        }
+        private async void ImportFromExcel_Click()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Excel fajl (*.xlsx)|*.xlsx"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (var package = new ExcelPackage(new FileInfo(openFileDialog.FileName)))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+                        int rowCount = worksheet.Dimension.Rows;
+
+                        for (int row = 2; row <= rowCount; row++) // preskače zaglavlje
+                        {
+                            string gost = worksheet.Cells[row, 4].Text;
+                            DateTime dolazak = DateTime.Parse(worksheet.Cells[row, 5].Text);
+                            DateTime odlazak = DateTime.Parse(worksheet.Cells[row, 6].Text);
+                            double total = double.Parse(worksheet.Cells[row, 8].Text);
+                            double provizija = double.TryParse(worksheet.Cells[row, 9].Text, out var p) ? p : 0;
+                            string zahtevi = worksheet.Cells[row, 10].Text;
+                            string zemlja = worksheet.Cells[row, 11].Text;
+                            if (!int.TryParse(worksheet.Cells[row, 12].Text, out int sobaId))
+                            {
+                                MessageBox.Show($"Nevalidan ID sobe u redu {row}.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                continue; // preskoči ovaj red ako nije validan ID
+                            }
+                            string telefon = worksheet.Cells[row, 13].Text;
+
+                            // Pronađi korisnika po imenu, telefonu i emailu
+                            var korisnik = (await _korisnikService.GetAllKorisnik())
+                                .FirstOrDefault(k => k.imePrezime == gost &&
+                                                     k.telefon == telefon &&
+                                                     k.email == "Nije ostavljen");
+
+                            if (korisnik == null)
+                            {
+                                // Ako ne postoji, dodaj ga
+                                var noviKorisnik = new Korisnik
+                                {
+                                    imePrezime = gost,
+                                    telefon = telefon,
+                                    email = "Nije ostavljen",
+                                    zemlja = zemlja
+                                };
+
+                                await _korisnikService.AddKorisnik(noviKorisnik);
+
+                                // Ponovno preuzimanje korisnika
+                                korisnik = (await _korisnikService.GetAllKorisnik())
+                                    .FirstOrDefault(k => k.imePrezime == gost &&
+                                                         k.telefon == telefon &&
+                                                         k.email == "Nije ostavljen");
+
+                                if (korisnik == null)
+                                {
+                                    MessageBox.Show($"Greška prilikom dodavanja korisnika '{gost}' u redu {row}.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    continue;
+                                }
+                            }
+
+                            // 2. Pronađi apartman i agenciju (po imenu)
+                            var apartman = await _apartmanService.GetByIdApartman(sobaId);
+                            var sveAgencije = await _agencijaService.GetAllAgencija();
+
+                            var agencijaBezAgencije = sveAgencije
+                                .FirstOrDefault(a => a.nazivAgencije.Trim().Equals("Bez Agencije", StringComparison.OrdinalIgnoreCase));
+
+                            if (agencijaBezAgencije == null)
+                            {
+                                MessageBox.Show("Nije pronađena agencija sa nazivom 'Bez Agencije'.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+
+                            // 3. Kreiraj rezervaciju
+                            var rezervacija = new Rezervacija
+                            {
+                                pocetniDatum = dolazak,
+                                krajnjiDatum = odlazak,
+                                ukupnaCena = total,
+                                cenaKonacna = total,
+                                iznosProvizije = provizija,
+                                placeno = false,
+                                komentar = zahtevi,
+                                nacinPlacanja = "Keš",
+
+                                apartmanId = apartman?.apartmanId ?? 0,
+                                korisnikId = korisnik.korisnikId,
+                                agencijaId = agencijaBezAgencije.agencijaId
+                            };
+
+                            await _rezervacijaService.AddRezervacija(rezervacija);
+                        }
+
+                        MessageBox.Show("Uvoz rezervacija iz Excel fajla uspešno završen!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Došlo je do greške: {ex.Message}\n" +
+                        $"Detalji: {ex.InnerException?.Message}",
+                        "Greška",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             }
         }
         private async void PostaviCenuApartmana()

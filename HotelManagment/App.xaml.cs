@@ -86,7 +86,6 @@ namespace HotelManagment
             services.AddScoped<ApartmaniPage>();
             services.AddScoped<HomePage>();
             services.AddScoped<LoginPage>();
-            services.AddScoped<MainWindow>();
         }
     }
 

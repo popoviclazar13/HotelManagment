@@ -6,10 +6,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\VilaBojana.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\VilaBojana.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\VilaBojana.ico" />
   </ItemGroup>
 
   <ItemGroup>

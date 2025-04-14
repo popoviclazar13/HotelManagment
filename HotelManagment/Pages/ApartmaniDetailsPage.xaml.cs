@@ -31,9 +31,11 @@ namespace HotelManagment.Pages
         private readonly IKorisnikService _korisnikService;
         private readonly IAgencijaService _agencijaService;
         private readonly ICenaApartmanaService _cenaApartmanaService;
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        private readonly IUslugaService _uslugaService;
         private readonly int _apartmanId;
 
-        public ApartmaniDetailsPage(int apartmanId, IApartmanService apartmanService, IPopustService opustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService)
+        public ApartmaniDetailsPage(int apartmanId, IApartmanService apartmanService, IPopustService opustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
             _apartmanService = apartmanService;
@@ -43,6 +45,8 @@ namespace HotelManagment.Pages
             _agencijaService = agencijaService;
             _cenaApartmanaService = cenaApartmanaService;
             _apartmanId = apartmanId;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
+            _uslugaService = uslugaService;
             LoadApartmanDetails();           
         }
 
@@ -117,7 +121,7 @@ namespace HotelManagment.Pages
             if (ReservationList.SelectedItem is Rezervacija selectedReservation && selectedReservation.rezervacijaId > 0)
             {
                 Action reloadDataAction = LoadApartmanDetails; // ili neka druga metoda za ponovno učitavanje podataka, ako je potrebno
-                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedReservation, reloadDataAction, _korisnikService, _agencijaService, _apartmanService));
+                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedReservation, reloadDataAction, _korisnikService, _agencijaService, _apartmanService, _rezervacijaUslugaService, _uslugaService));
                 ReservationList.SelectedItem = null; // Resetovanje selekcije
             }
         }

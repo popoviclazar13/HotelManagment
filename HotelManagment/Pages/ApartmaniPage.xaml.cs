@@ -29,8 +29,10 @@ namespace HotelManagment.Pages
         private readonly IKorisnikService _korisnikService;
         private readonly IAgencijaService _agencijaService;
         private readonly ICenaApartmanaService _cenaApartmanaService;
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        private readonly IUslugaService _uslugaService;
         private readonly int _zgradaId;
-        public ApartmaniPage(int zgradaId, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService)
+        public ApartmaniPage(int zgradaId, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
             _apartmanService = apartmanService; // Servis dobijamo preko Dependency Injection-a
@@ -40,6 +42,8 @@ namespace HotelManagment.Pages
             _korisnikService = korisnikService;
             _agencijaService = agencijaService;
             _cenaApartmanaService = cenaApartmanaService;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
+            _uslugaService = uslugaService;
             LoadApartmani();
             
         }
@@ -117,7 +121,7 @@ namespace HotelManagment.Pages
             if (sender is Button button && button.Tag is int apartmanId)
             {
                 // Navigacija na detalje apartmana
-                NavigationService?.Navigate(new ApartmaniDetailsPage(apartmanId, _apartmanService, _popustService, _rezervacijaService, _korisnikService, _agencijaService, _cenaApartmanaService));
+                NavigationService?.Navigate(new ApartmaniDetailsPage(apartmanId, _apartmanService, _popustService, _rezervacijaService, _korisnikService, _agencijaService, _cenaApartmanaService, _rezervacijaUslugaService, _uslugaService));
             }
         }
         public async Task<bool> IsApartmanAvailable(int apartmanId)

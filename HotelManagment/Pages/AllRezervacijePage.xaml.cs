@@ -66,7 +66,7 @@ namespace HotelManagment.Pages
             if (RezervacijeDataGrid.SelectedItem is Rezervacija selectedRezervacija && selectedRezervacija.rezervacijaId > 0)
             {
                 Action reloadDataAction = LoadRezervacije; // ili neka druga metoda za ponovno učitavanje podataka, ako je potrebno
-                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedRezervacija, reloadDataAction, _korisnikService, _agencijaService, _apartmanService));
+                NavigationService.Navigate(new RezervacijaEditWindow(_rezervacijaService, selectedRezervacija, reloadDataAction, _korisnikService, _agencijaService, _apartmanService, _rezervacijaUslugaService, _uslugaService));
                 RezervacijeDataGrid.SelectedItem = null; // Resetovanje selekcije
             }
         }

@@ -28,9 +28,11 @@ namespace HotelManagment.Pages
         private readonly IKorisnikService _korisnikService;
         private readonly IAgencijaService _agencijaService;
         private readonly IApartmanService _apartmanService;
+        private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
+        private readonly IUslugaService _uslugaService;
         public Rezervacija SelectedReservation { get; set; }
         private readonly Action _reloadDataAction;
-        public RezervacijaEditWindow(IRezervacijaService rezervacijaService, Rezervacija selectedReservation, Action reloadDataAction, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService)
+        public RezervacijaEditWindow(IRezervacijaService rezervacijaService, Rezervacija selectedReservation, Action reloadDataAction, IKorisnikService korisnikService, IAgencijaService agencijaService, IApartmanService apartmanService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
             _rezervacijaService = rezervacijaService;
@@ -39,6 +41,8 @@ namespace HotelManagment.Pages
             SelectedReservation = selectedReservation;
             _reloadDataAction = reloadDataAction;
             _apartmanService = apartmanService;
+            _rezervacijaUslugaService = rezervacijaUslugaService;
+            _uslugaService = uslugaService;
             LoadComboBoxData();
             LoadGuestCountComboBox();
 
@@ -57,7 +61,6 @@ namespace HotelManagment.Pages
             // Postavljanje selektovanih vrednosti za korisnika i agenciju
             UserComboBox.SelectedValue = selectedReservation.korisnik?.korisnikId;
             AgencyComboBox.SelectedValue = selectedReservation.agencija?.agencijaId;
-            _apartmanService = apartmanService;
         }
         private async void LoadComboBoxData()
         {
@@ -75,10 +78,27 @@ namespace HotelManagment.Pages
                 ApartmanComboBox.ItemsSource = apartmani;
                 Debug.WriteLine($"Učitaj apartmane: {apartmani.Count()}");
 
+                var usluge = await _uslugaService.GetAllUsluga();
+                ServicesComboBox.ItemsSource = usluge;
+                Debug.WriteLine($"Učitaj usluge: {apartmani.Count()}");
+
                 // Sada kada su podaci učitani, postavi selektovane vrednosti
                 UserComboBox.SelectedValue = SelectedReservation.korisnik?.korisnikId;
                 AgencyComboBox.SelectedValue = SelectedReservation.agencija?.agencijaId;
                 ApartmanComboBox.SelectedValue = SelectedReservation.apartman?.apartmanId;
+
+                var rezervacijaUsluge = await _rezervacijaUslugaService.GetUslugeByRezervacijaId(SelectedReservation.rezervacijaId);
+                var sveUsluge = (List<Usluga>)ServicesComboBox.ItemsSource;
+
+                var selektovaneUsluge = sveUsluge
+                    .Where(usluga => rezervacijaUsluge.Any(ru => ru.uslugaId == usluga.uslugaId))
+                    .ToList();
+
+                // Postavljamo selektovane elemente
+                foreach (var usluga in selektovaneUsluge)
+                {
+                    ServicesComboBox.SelectedItems.Add(usluga);
+                }
             }
             catch (Exception ex)
             {
@@ -100,6 +120,41 @@ namespace HotelManagment.Pages
             SelectedReservation.korisnik = UserComboBox.SelectedItem as Korisnik;
             SelectedReservation.agencija = AgencyComboBox.SelectedItem as Agencija;
             SelectedReservation.apartman = ApartmanComboBox.SelectedItem as Apartman;
+
+            // Prvo, pronalazimo sve postojeće RezervacijaUsluga torke povezane sa ovom rezervacijom
+            var postojeceRezervacijaUsluge = await _rezervacijaUslugaService.GetRezervacijaUslugaByRezervacijaId(SelectedReservation.rezervacijaId);
+
+            // Selektovane usluge
+            var selectedServices = ServicesComboBox.SelectedItems.Cast<Usluga>().ToList();
+
+            // Brišemo usluge koje više nisu selektovane
+            foreach (var rezervacijaUsluga in postojeceRezervacijaUsluge)
+            {
+                if (!selectedServices.Any(s => s.uslugaId == rezervacijaUsluga.uslugaId))
+                {
+                    // Brišemo torku iz RezervacijaUsluga prema rezervacijaUslugaId
+                    await _rezervacijaUslugaService.DeleteRezervacijaUsluga(rezervacijaUsluga.rezervacijaUslugaId);
+                }
+            }
+
+            // Dodajemo nove selektovane usluge koje nisu već povezane sa rezervacijom
+            foreach (var service in selectedServices)
+            {
+                // Ako usluga nije već povezana sa rezervacijom, dodajemo je
+                if (!postojeceRezervacijaUsluge.Any(r => r.uslugaId == service.uslugaId))
+                {
+                    var rezervacijaUsluga = new RezervacijaUsluga
+                    {
+                        rezervacijaId = SelectedReservation.rezervacijaId,
+                        uslugaId = service.uslugaId,
+                        kolicina = 0, // Postavi količinu, možeš promeniti vrednost ako je potrebno
+                        datum = DateTime.Now
+                    };
+
+                    // Dodajemo novu uslugu u RezervacijaUsluga
+                    await _rezervacijaUslugaService.AddRezervacijaUsluga(rezervacijaUsluga);
+                }
+            }
 
             try
             {

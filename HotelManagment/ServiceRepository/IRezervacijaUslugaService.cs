@@ -14,5 +14,7 @@ namespace HotelManagment.ServiceRepository
         Task AddRezervacijaUsluga(RezervacijaUsluga rezervacijaUsluga);
         Task UpdateRezervacijaUsluga(RezervacijaUsluga rezervacijaUsluga);
         Task DeleteRezervacijaUsluga(int id);
+        Task<List<Usluga>> GetUslugeByRezervacijaId(int rezervacijaId);
+        Task<List<RezervacijaUsluga>> GetRezervacijaUslugaByRezervacijaId(int rezervacijaId);
     }
 }

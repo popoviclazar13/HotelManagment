@@ -2,6 +2,7 @@
 using HotelManagment.InterfaceRepository;
 using HotelManagment.Repository;
 using HotelManagment.ServiceRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,13 @@ namespace HotelManagment.Service
             // Direktno dohvatamo Usluge koje imaju odgovarajuće ID-jeve (optimizovano)
             return await _uslugaRepository.GetAllAsync(u => uslugaIds.Contains(u.uslugaId));
         }
-        //
+
+        public async Task<List<RezervacijaUsluga>> GetRezervacijaUslugaByRezervacijaId(int rezervacijaId)
+        {
+            var rezervacijaUsluge = await _rezervacijaUslugaRepository
+            .GetAllAsync(ru => ru.rezervacijaId == rezervacijaId); // Koristimo repo za asinhrono dohvatanje podataka
+
+            return rezervacijaUsluge;
+        }
     }
 }

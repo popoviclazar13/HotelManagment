@@ -64,7 +64,18 @@
                         <ComboBoxItem Content="Keš"/>
                         <ComboBoxItem Content="Kartica"/>
                     </ComboBox>
-                
+
+                    <TextBlock Text="Usluge:" Margin="5"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="125">
+                        <ListBox x:Name="ServicesComboBox" Margin="5" Width="250" SelectionMode="Multiple">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding nazivUsluge}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
                 </StackPanel>
 
                 <!-- Treća kolona -->

@@ -92,7 +92,7 @@ namespace HotelManagment.Pages
         {
             if (sender is Button button && button.Tag is int zgradaId)
             {
-                NavigationService?.Navigate(new ApartmaniPage(zgradaId, _apartmanService, _popustService, _rezervacijaService, _korisnikService, _agencijaService, _cenaApartmanaService));
+                NavigationService?.Navigate(new ApartmaniPage(zgradaId, _apartmanService, _popustService, _rezervacijaService, _korisnikService, _agencijaService, _cenaApartmanaService, _rezervacijaUslugaService, _uslugaService));
             }
         }
         private void Rezervacije_Click(object sender, RoutedEventArgs e)

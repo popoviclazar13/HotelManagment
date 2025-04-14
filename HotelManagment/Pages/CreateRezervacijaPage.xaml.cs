@@ -314,6 +314,7 @@ namespace HotelManagment.Pages
                         }
 
                         MessageBox.Show("Uvoz rezervacija iz Excel fajla uspešno završen!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+                        _reloadDataAction();
 
                     }
                 }

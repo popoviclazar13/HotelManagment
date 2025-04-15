@@ -128,7 +128,7 @@ namespace HotelManagment.Pages
             KrevetiFilterComboBox.SelectedIndex = 0; // Postavljanje default selekcije
         }
 
-        private async Task FiltrirajApartmane()
+        /*private async Task FiltrirajApartmane()
         {
             var filtriraniApartmani = _sviApartmani.AsEnumerable();
 
@@ -233,6 +233,129 @@ namespace HotelManagment.Pages
             // **Ažuriranje prikaza u DataGrid-u**
             ApartmaniDataGrid.ItemsSource = _filtriraniApartmani;
             ApartmaniDataGrid.Items.Refresh();
+        } */
+        private async Task FiltrirajApartmane()
+        {
+            var filtriraniApartmani = _sviApartmani.AsEnumerable();
+
+            // **Filter po tipu apartmana**
+            var selectedTipApartmana = TipApartmanaFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedTipApartmana) && selectedTipApartmana != "Odaberite tip apartmana")
+            {
+                filtriraniApartmani = filtriraniApartmani.Where(a => a.tipApartmana.nazivTipaApartmana == selectedTipApartmana);
+            }
+
+            // **Filter po zauzetosti**
+            var selectedZauzetItem = ZauzetFilterComboz.SelectedItem as ComboBoxItem;
+            string selectedZauzetStatus = selectedZauzetItem?.Content.ToString();
+
+            if (string.IsNullOrEmpty(selectedZauzetStatus) || selectedZauzetStatus == "Odaberite status")
+            {
+                selectedZauzetStatus = null;
+            }
+
+            // **Filter po selektovanom apartmanu**
+            var selectedApartmentName = ApartmentFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedApartmentName) && selectedApartmentName != "Odaberite apartman")
+            {
+                filtriraniApartmani = filtriraniApartmani.Where(a => a.nazivApartmana == selectedApartmentName);
+            }
+
+            // **Filter po spratu**
+            var selectedSprat = SpratFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedSprat) && selectedSprat != "Odaberite sprat")
+            {
+                if (int.TryParse(selectedSprat, out int spratValue))
+                {
+                    filtriraniApartmani = filtriraniApartmani.Where(a => a.brojSprata == spratValue);
+                }
+            }
+
+            // **Filter po broju kreveta**
+            var selectedKrevet = KrevetiFilterComboBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(selectedKrevet) && selectedKrevet != "Odaberite broj kreveta")
+            {
+                if (int.TryParse(selectedKrevet, out int krevetValue))
+                {
+                    filtriraniApartmani = filtriraniApartmani.Where(a => a.ukupniKapacitet == krevetValue);
+                }
+            }
+
+            DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
+            DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
+
+            List<Rezervacija> sveRezervacije = null;
+
+            try
+            {
+                sveRezervacije = await _rezervacijaService.GetAllRezervacija();
+                if (sveRezervacije == null)
+                {
+                    Console.WriteLine("Greška: Nema rezervacija");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Greška prilikom učitavanja rezervacija: {ex.Message}");
+                return;
+            }
+
+            // **Filter po datumu i zauzetosti**
+            if (!string.IsNullOrEmpty(selectedZauzetStatus) && pocetniDatum.HasValue && krajnjiDatum.HasValue)
+            {
+                bool trazimoZauzete = selectedZauzetStatus == "Zauzet";
+                bool trazimoSlobodne = selectedZauzetStatus == "Slobodan";
+                bool trazimoPreklapanja = selectedZauzetStatus == "Preklapanja";
+
+                filtriraniApartmani = filtriraniApartmani.Where(a =>
+                {
+                    var rezervacijeApartmana = sveRezervacije.Where(r => r.apartmanId == a.apartmanId).ToList();
+
+                    bool potpunoZauzet = rezervacijeApartmana.Any(r =>
+                        r.pocetniDatum <= pocetniDatum.Value &&
+                        r.krajnjiDatum >= krajnjiDatum.Value);
+
+                    bool delimičnoZauzet = rezervacijeApartmana.Any(r =>
+                        pocetniDatum.Value < r.krajnjiDatum && krajnjiDatum.Value > r.pocetniDatum);
+
+                    if (trazimoZauzete)
+                    {
+                        return potpunoZauzet;
+                    }
+
+                    if (trazimoSlobodne)
+                    {
+                        return !delimičnoZauzet;
+                    }
+
+                    if (trazimoPreklapanja)
+                    {
+                        return delimičnoZauzet && !potpunoZauzet;
+                    }
+
+                    return true;
+                });
+            }
+
+            // **Popuni termine ako su datumi selektovani**
+            if (pocetniDatum.HasValue && krajnjiDatum.HasValue)
+            {
+                foreach (var apartman in filtriraniApartmani)
+                {
+                    await PopuniTermine(apartman, sveRezervacije);
+                }
+            }
+
+            _filtriraniApartmani = filtriraniApartmani.ToList();
+
+            if (_filtriraniApartmani.Count == 0)
+            {
+                Console.WriteLine("Nema filtriranih apartmana");
+            }
+
+            ApartmaniDataGrid.ItemsSource = _filtriraniApartmani;
+            ApartmaniDataGrid.Items.Refresh();
         }
 
         private async Task PopuniTermine(Apartman apartman, List<Rezervacija> sveRezervacije)
@@ -313,10 +436,33 @@ namespace HotelManagment.Pages
 
         private async void ZauzetFilterComboz_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && ZauzetFilterComboz.SelectedItem != null)
+            // Ako je selektovana stavka "Odaberite status", ne radi ništa
+            if (ZauzetFilterComboz.SelectedItem is ComboBoxItem selectedItem &&
+                selectedItem.Content.ToString() == "Odaberite status")
             {
-                await FiltrirajApartmane();
+                return;
             }
+
+            // Provera da li su datumi selektovani
+            if (PocetniDatumPicker.SelectedDate == null && KrajnjiDatumPicker.SelectedDate != null)
+            {
+                MessageBox.Show("Molimo izaberite početni datum.", "Upozorenje", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (PocetniDatumPicker.SelectedDate != null && KrajnjiDatumPicker.SelectedDate == null)
+            {
+                MessageBox.Show("Molimo izaberite krajnji datum.", "Upozorenje", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (PocetniDatumPicker.SelectedDate == null && KrajnjiDatumPicker.SelectedDate == null)
+            {
+                MessageBox.Show("Molimo izaberite oba datuma.", "Upozorenje", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            await FiltrirajApartmane();
         }
         private async void ApartmentFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

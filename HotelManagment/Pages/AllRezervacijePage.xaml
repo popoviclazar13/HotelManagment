@@ -89,10 +89,10 @@
 
         <!-- Ukupna cena (Pomeren u Grid.Row="5") -->
         <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,0,20">
-            Neto cena: 0 EUR
+            Bruto cena: 0 EUR
         </TextBlock>
         <TextBlock x:Name="BrutoCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,20,500,20">
-            Bruto cena: 0 EUR
+            Neto cena: 0 EUR
         </TextBlock>
 
     </Grid>

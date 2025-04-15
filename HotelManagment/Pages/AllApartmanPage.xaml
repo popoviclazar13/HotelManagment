@@ -45,6 +45,7 @@
             <ComboBox x:Name="ZauzetFilterComboz" Width="150" Margin="0,0,10,0" SelectionChanged="ZauzetFilterComboz_SelectionChanged">
                 <ComboBoxItem Content="Odaberite status"/>
                 <ComboBoxItem Content="Zauzet"/>
+                <ComboBoxItem Content="Preklapanja"/>
                 <ComboBoxItem Content="Slobodan"/>
             </ComboBox>
 

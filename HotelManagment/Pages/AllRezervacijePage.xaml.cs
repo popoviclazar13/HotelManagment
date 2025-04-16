@@ -188,8 +188,8 @@ namespace HotelManagment.Pages
             // Izračunavanje bruto cene (Ukupna cena - ukupna provizija)
             double brutoCena = ukupnaCena - ukupnaProvizija;
 
-            UkupnaCenaTextBlock.Text = $"Neto cena: {ukupnaCena:F2} EUR";
-            BrutoCenaTextBlock.Text = $"Bruto cena: {brutoCena:F2} EUR";
+            UkupnaCenaTextBlock.Text = $"Bruto cena: {ukupnaCena:F2} EUR";
+            NetoCenaTextBlock.Text = $"Neto cena: {brutoCena:F2} EUR";
         }
 
 

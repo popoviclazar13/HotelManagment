@@ -75,9 +75,55 @@
         </StackPanel>
 
         <!-- DataGrid pomeren u Grid.Row="4", maksimalna visina 500 -->
-        <DataGrid x:Name="RezervacijeDataGrid" Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
-                  VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
-                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" Grid.Row="4" MaxHeight="400">
+        <DataGrid x:Name="RezervacijeDataGrid"
+          Margin="20"
+          MaxWidth="1250"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Top"
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          SelectionChanged="RezervacijeDataGrid_SelectionChanged"
+          Grid.Row="4"
+          MaxHeight="400"
+          SelectionMode="Single"
+          SelectionUnit="FullRow"
+          RowBackground="#faf6f4">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="#faf6f4"/>
+                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridRow">
+                                <Grid>
+                                    <Border x:Name="DGR_Border" 
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                        <DataGridCellsPresenter/>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <!-- Selektovani red -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="DGR_Border" Property="Background" Value="#c8e6c9"/>
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </Trigger>
+                                    <!-- Hover efekat (svetlo plava) -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="DGR_Border" Property="Background" Value="#add8e6"/>
+                                        <!-- Svetlo plava -->
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Apartman" Width="100" Binding="{Binding apartman.nazivApartmana}" />
                 <DataGridTextColumn Header="Gost" Width="150" Binding="{Binding korisnik.imePrezime}" />
@@ -96,7 +142,7 @@
         <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,0,0,0">
             Bruto cena: 0 EUR
         </TextBlock>
-        <TextBlock x:Name="BrutoCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,0,500,0">
+        <TextBlock x:Name="NetoCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,0,500,0">
             Neto cena: 0 EUR
         </TextBlock>
         <Button x:Name="IzveziUExcelButton" Grid.Row="6" Content="Izvezi u Excel" Width="150" Height="30"

@@ -10,14 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Bazen.jpg" />
     <None Remove="Images\VilaBojana.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\Bazen.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\VilaBojana.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ApartmaniPage">
+      Title="ApartmaniPage" Background="#faf6f4">
 
     <Grid>
         <StackPanel x:Name="ApartmaniPanel" Margin="10">

@@ -6,13 +6,14 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AllOpremaPage">
+      Title="AllOpremaPage" Background="#faf6f4">
 
     <Grid>
-        <!-- Naslov centriran na vrhu -->
-        <TextBlock Text="Lista Opreme" FontSize="24" 
-                   HorizontalAlignment="Center" VerticalAlignment="Top" 
-                   Margin="0,20,0,0"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
+            <TextBlock Text="Lista Opreme" FontSize="24" VerticalAlignment="Center"/>
+            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7F8;" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#f8b745"/>
+        </StackPanel>
 
         <!-- Dugme u gornjem levom uglu -->
         <Button Content="Dodaj opremu" Width="120" Height="30" 

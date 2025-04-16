@@ -6,10 +6,13 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AllKorisniciPage">
+      Title="AllKorisniciPage" Background="#faf6f4">
 
     <Grid>
-        <TextBlock Text="Lista Gostiju" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
+            <TextBlock Text="Lista Gostiju" FontSize="24" VerticalAlignment="Center"/>
+            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" Margin="15,0,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#f8b745"/>
+        </StackPanel>
 
         <!-- DataGrid za prikaz korisnika -->
         <DataGrid x:Name="KorisniciDataGrid" Margin="20,60,20,20" MaxWidth="1250" MaxHeight="500" HorizontalAlignment="Center" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="KorisniciDataGrid_SelectionChanged">

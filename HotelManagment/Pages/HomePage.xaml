@@ -6,9 +6,10 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="HomePage">
+      Title="HomePage" Background="#faf6f4">
 
     <Grid>
+        <Image Source="/Images/Bazen.jpg" Stretch="Fill"/>
         <!-- Navigacioni bar -->
         <Grid VerticalAlignment="Top" Height="80">
             <Grid.ColumnDefinitions>
@@ -18,18 +19,52 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                <Button Content="Rezervacije" Width="120" Height="50" FontSize="16" Margin="10"
-                    Background="LightGray" Foreground="Black" Click="Rezervacije_Click"/>
-                <Button Content="Apartmani" Width="110" Height="50" FontSize="16" Margin="10"
-                    Background="LightGray" Foreground="Black" Click="Apartmani_Click"/>
-                <Button Content="Usluge" Width="100" Height="50" FontSize="16" Margin="10"
-                        Background="LightGray" Foreground="Black" Click="Usluge_Click"/>
-                <Button Content="Oprema" Width="100" Height="50" FontSize="16" Margin="10"
-                        Background="LightGray" Foreground="Black" Click="Oprema_Click"/>
-                <Button Content="Popusti" Width="100" Height="50" FontSize="16" Margin="10"
-                        Background="LightGray" Foreground="Black" Click="Popusti_Click"/>
-                <Button Content="Gosti" Width="100" Height="50" FontSize="16" Margin="10"
-                    Background="LightGray" Foreground="Black" Click="Korisnici_Click"/>
+                <Button Width="120" Height="50" FontSize="16" Margin="10"
+            Background="LightGray" Foreground="Black" Click="Rezervacije_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16"  Foreground="DodgerBlue"/>
+                        <TextBlock Text="Rezervacije" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="110" Height="50" FontSize="16" Margin="10"
+            Background="LightGray" Foreground="Black" Click="Apartmani_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEC06;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" Foreground="DodgerBlue" />
+                        <TextBlock Text="Apartmani" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="100" Height="50" FontSize="16" Margin="10"
+            Background="LightGray" Foreground="Black" Click="Usluge_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16"  Foreground="DodgerBlue"/>
+                        <TextBlock Text="Usluge" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="100" Height="50" FontSize="16" Margin="10" Background="LightGray" Foreground="Black" Click="Oprema_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7F8;" VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0"  Foreground="DodgerBlue"/>
+                        <TextBlock Text="Oprema" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="100" Height="50" FontSize="16" Margin="10"
+            Background="LightGray" Foreground="Black" Click="Popusti_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xe82d;" VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0"  Foreground="DodgerBlue"/>
+                        <TextBlock Text="Popusti" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="100" Height="50" FontSize="16" Margin="10"
+            Background="LightGray" Foreground="Black" Click="Korisnici_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0"  Foreground="DodgerBlue"/>
+                        <TextBlock Text="Gosti" VerticalAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </Grid>
 

@@ -1,6 +1,9 @@
-﻿using HotelManagment.Entitys;
+﻿using ClosedXML.Excel;
+using HotelManagment.DTO.DTORezervacija;
+using HotelManagment.Entitys;
 using HotelManagment.Service;
 using HotelManagment.ServiceRepository;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -282,6 +285,68 @@ namespace HotelManagment.Pages
             // Logika za filtriranje rezervacija koje se završavaju na selectedDate
             var filteredReservations = await _rezervacijaService.GetRezervacijeByKrajnjiDatum(endDate);
             RezervacijeDataGrid.ItemsSource = filteredReservations;
+        }
+        private async void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel fajl (*.xlsx)|*.xlsx",
+                FileName = "Rezervacije.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Rezervacije");
+
+                        // Piši zaglavlja
+                        worksheet.Cell(1, 1).Value = "Apartman";
+                        worksheet.Cell(1, 2).Value = "Gost";
+                        worksheet.Cell(1, 3).Value = "Dolazak";
+                        worksheet.Cell(1, 4).Value = "Odlazak";
+                        worksheet.Cell(1, 5).Value = "Broj noćenja";
+                        worksheet.Cell(1, 6).Value = "Ukupna cena";
+                        worksheet.Cell(1, 7).Value = "Provizija";
+                        worksheet.Cell(1, 8).Value = "Zahtevi";
+                        worksheet.Cell(1, 9).Value = "Zemlja";
+                        worksheet.Cell(1, 10).Value = "SobaID";
+                        worksheet.Cell(1, 11).Value = "Telefon";
+                        worksheet.Cell(1, 12).Value = "Broj gostiju";
+                        worksheet.Cell(1, 13).Value = "Placeno";
+
+                        // Podaci iz DataGrida
+                        var rezervacije = RezervacijeDataGrid.ItemsSource.Cast<Rezervacija>().ToList();
+
+                        for (int i = 0; i < rezervacije.Count; i++)
+                        {
+                            var r = rezervacije[i];
+                            worksheet.Cell(i + 2, 1).Value = r.apartman?.nazivApartmana ?? "";
+                            worksheet.Cell(i + 2, 2).Value = r.korisnik?.imePrezime ?? "";
+                            worksheet.Cell(i + 2, 3).Value = r.pocetniDatum.ToString("dd.MM.yyyy");
+                            worksheet.Cell(i + 2, 4).Value = r.krajnjiDatum.ToString("dd.MM.yyyy");
+                            worksheet.Cell(i + 2, 5).Value = (r.krajnjiDatum - r.pocetniDatum).Days;
+                            worksheet.Cell(i + 2, 6).Value = r.ukupnaCena;
+                            worksheet.Cell(i + 2, 7).Value = r.iznosProvizije;
+                            worksheet.Cell(i + 2, 8).Value = r.komentar;
+                            worksheet.Cell(i + 2, 9).Value = r.korisnik?.zemlja ?? "";
+                            worksheet.Cell(i + 2, 10).Value = r.apartman?.apartmanId ?? 0;
+                            worksheet.Cell(i + 2, 11).Value = r.korisnik?.telefon ?? "";
+                            worksheet.Cell(i + 2, 12).Value = r.brojGostiju;
+                            worksheet.Cell(i + 2, 13).Value = r.placeno ? "DA" : "NE";
+                        }
+
+                        workbook.SaveAs(saveFileDialog.FileName);
+                        MessageBox.Show("Podaci uspešno izvezeni u Excel!", "Uspešno", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Greška pri izvozu: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

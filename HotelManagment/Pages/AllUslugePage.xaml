@@ -6,14 +6,33 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AllUslugePage">
+      Title="AllUslugePage" Background="#faf6f4">
 
     <Grid>
-        <TextBlock Text="Lista Usluga" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
-        <DataGrid x:Name="UslugeDataGrid" AutoGenerateColumns="False" 
+        <!-- Define rows for StackPanel and DataGrid -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Row for StackPanel -->
+            <RowDefinition Height="*"/>
+            <!-- Row for DataGrid (takes remaining space) -->
+        </Grid.RowDefinitions>
+
+        <!-- StackPanel for the title and icon -->
+        <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Lista Usluga" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,15,0"/>
+            <TextBlock Grid.Column="1" FontFamily="Segoe MDL2 Assets" Text="&#xE713;" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="24" Foreground="#f8b745"/>
+        </Grid>
+
+        <!-- DataGrid for displaying service list -->
+        <DataGrid x:Name="UslugeDataGrid" Grid.Row="1" AutoGenerateColumns="False" 
                   HorizontalAlignment="Center" VerticalAlignment="Top"
                   SelectionMode="Single" SelectionChanged="UslugeDataGrid_SelectionChanged" CanUserAddRows="False"
-                  Width="Auto" Height="Auto" Margin="0,60,0,0">
+                  Width="Auto" Height="Auto" Margin="0,30,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Naziv Usluge" Binding="{Binding nazivUsluge}" Width="270" MinWidth="150"/>
                 <DataGridTextColumn Header="Cena" Binding="{Binding cenaUsluge}" Width="80" MinWidth="80"/>

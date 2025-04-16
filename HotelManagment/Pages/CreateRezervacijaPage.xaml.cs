@@ -247,6 +247,7 @@ namespace HotelManagment.Pages
                                 continue; // preskoči ovaj red ako nije validan ID
                             }
                             string telefon = worksheet.Cells[row, 13].Text;
+                            int brojGostiju = int.Parse(worksheet.Cells[row, 14].Text);
 
                             // Pronađi korisnika po imenu, telefonu i emailu
                             var korisnik = (await _korisnikService.GetAllKorisnik())
@@ -303,6 +304,7 @@ namespace HotelManagment.Pages
                                 iznosProvizije = provizija,
                                 placeno = false,
                                 komentar = zahtevi,
+                                brojGostiju = brojGostiju,
                                 nacinPlacanja = "Keš",
 
                                 apartmanId = apartman?.apartmanId ?? 0,

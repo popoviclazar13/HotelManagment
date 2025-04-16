@@ -65,7 +65,7 @@ namespace HotelManagment.Pages
                         Width = 100,
                         Height = 100,
                         Margin = new Thickness(10),
-                        Background = System.Windows.Media.Brushes.SkyBlue,
+                        Background = System.Windows.Media.Brushes.LightGray,
                         BorderBrush = System.Windows.Media.Brushes.Black,
                         BorderThickness = new Thickness(2),
                         Tag = zgrada.zgradaId // Čuvamo ID zgrade u Tag svojstvu

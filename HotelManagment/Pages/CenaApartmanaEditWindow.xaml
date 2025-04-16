@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="CenaApartmanaEditWindow">
+      Title="CenaApartmanaEditWindow" Background="#faf6f4">
 
     <Grid>
         <TextBlock Text="Ažuriranje Cene Apartmana" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>

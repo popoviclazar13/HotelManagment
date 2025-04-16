@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="900"
-      Title="Izmena Rezervacije">
+      Title="Izmena Rezervacije" Background="#faf6f4">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">

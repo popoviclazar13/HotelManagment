@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="528" d:DesignWidth="800"
-      Title="CreateRezervacijaPage">
+      Title="CreateRezervacijaPage" Background="#faf6f4">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">

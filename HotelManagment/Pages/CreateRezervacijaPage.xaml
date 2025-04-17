@@ -27,7 +27,7 @@
                     <DatePicker x:Name="StartDatePicker" Margin="5" SelectedDateChanged="StartDatePicker_SelectedDateChanged" Width="250"/>
 
                     <TextBlock Text="Broj Gostiju:" Margin="5"/>
-                    <ComboBox x:Name="GuestCountComboBox" Margin="5" Width="250"/>
+                    <ComboBox x:Name="GuestCountComboBox" Margin="5" SelectionChanged="GuestCountComboBox_SelectionChanged" Width="250"/>
 
                     <TextBlock Text="Cena:" Margin="5"/>
                     <TextBox x:Name="PriceTextBox" Margin="5" Width="250"/>
@@ -96,6 +96,7 @@
 
                     <TextBlock Text="Popust:" Margin="5"/>
                     <ComboBox x:Name="DiscountComboBox" Margin="5" Width="250" SelectionChanged="DiscountComboBox_SelectionChanged">
+                        <ComboBoxItem Content="0%" />
                         <ComboBoxItem Content="5%" />
                         <ComboBoxItem Content="10%" />
                         <ComboBoxItem Content="15%" />

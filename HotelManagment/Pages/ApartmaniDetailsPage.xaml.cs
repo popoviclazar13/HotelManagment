@@ -80,7 +80,7 @@ namespace HotelManagment.Pages
                 Debug.WriteLine($"Popust: {discount.nazivPopusta}, Vrednost: {discount.vrednost}");
             }
 
-            DiscountList.ItemsSource = discountList;
+            //DiscountList.ItemsSource = discountList;
             // Postavljanje rezervacija
             
             var validReservations = apartman.listaRezervacija
@@ -107,7 +107,7 @@ namespace HotelManagment.Pages
                 PriceList.SelectedItem = null; // Resetovanje selekcije
             }
         }
-        private void DiscountList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private void DiscountList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DiscountList.SelectedItem is Popust selectedDiscount && selectedDiscount.popustId > 0)
             {
@@ -115,7 +115,56 @@ namespace HotelManagment.Pages
                 NavigationService.Navigate(new PopustEditWindow(_popustService, selectedDiscount, reloadDataAction));
                 DiscountList.SelectedItem = null;
             }
-        }
+        }*/
+        /*
+         * <!-- Popusti -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center" Width="500">
+                        <TextBlock Text="Popusti" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+                        <ScrollViewer Height="120" VerticalScrollBarVisibility="Auto">
+                            <DataGrid x:Name="DiscountList"
+                              AutoGenerateColumns="False"
+                              SelectionMode="Single"
+                              SelectionChanged="DiscountList_SelectionChanged"
+                              CanUserAddRows="False"
+                              Width="370">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Naziv" Binding="{Binding nazivPopusta}" Width="100">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Vrednost" Binding="{Binding vrednost}" Width="90">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Datum Od" Binding="{Binding pocetniDatum, StringFormat={}{0:dd.MM.yyyy}}" Width="90">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Datum Do" Binding="{Binding krajnjiDatum, StringFormat={}{0:dd.MM.yyyy}}" Width="90">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </ScrollViewer>
+                    </StackPanel>
+         */
         private void ReservationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ReservationList.SelectedItem is Rezervacija selectedReservation && selectedReservation.rezervacijaId > 0)

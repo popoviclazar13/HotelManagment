@@ -16,13 +16,7 @@
                            HorizontalAlignment="Center" Margin="0,20,0,10"/>
 
                 <!-- Kapacitet -->
-                <TextBlock x:Name="ApartmentCapacity" Margin="5" FontSize="16" Width="200"/>
-
-                <!-- Oprema -->
-                <TextBlock Text="Oprema:" FontWeight="Bold" Margin="5" Width="200"/>
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListView x:Name="EquipmentList" Margin="5" Width="200" Height="80"/>
-                </ScrollViewer>
+                <TextBlock x:Name="ApartmentCapacity" Margin="5" FontSize="16" Width="300"/>
 
                 <!-- Grid za tabele -->
                 <Grid>
@@ -78,51 +72,11 @@
                             </DataGrid>
                         </ScrollViewer>
                     </StackPanel>
-                    <!-- Popusti -->
+                    <!-- Oprema -->
                     <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center" Width="500">
-                        <TextBlock Text="Popusti" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
-                        <ScrollViewer Height="120" VerticalScrollBarVisibility="Auto">
-                            <DataGrid x:Name="DiscountList"
-                              AutoGenerateColumns="False"
-                              SelectionMode="Single"
-                              SelectionChanged="DiscountList_SelectionChanged"
-                              CanUserAddRows="False"
-                              Width="370">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Naziv" Binding="{Binding nazivPopusta}" Width="100">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Vrednost" Binding="{Binding vrednost}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Datum Od" Binding="{Binding pocetniDatum, StringFormat={}{0:dd.MM.yyyy}}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Datum Do" Binding="{Binding krajnjiDatum, StringFormat={}{0:dd.MM.yyyy}}" Width="90">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="TextAlignment" Value="Center"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                        <TextBlock Text="Oprema:" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ListView x:Name="EquipmentList" Margin="5" Width="200" Height="100"/>
                         </ScrollViewer>
                     </StackPanel>
                 </Grid>

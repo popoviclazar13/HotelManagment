@@ -178,10 +178,15 @@ namespace HotelManagment.Pages
         private void ApartmentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadGuestCountComboBox();
-            PostaviCenuApartmana(); // Pozivanje metode da se ažurira cena
+            //PostaviCenuApartmana(); // Pozivanje metode da se ažurira cena
         }
 
         private void StartDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PostaviCenuApartmana(); // Pozivanje metode da se ažurira cena prilikom promene datuma
+        }
+
+        private void GuestCountComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PostaviCenuApartmana(); // Pozivanje metode da se ažurira cena prilikom promene datuma
         }
@@ -379,7 +384,7 @@ namespace HotelManagment.Pages
                         return;
                     }
 
-                    foreach (var cena in relevantPrices)
+                    /*foreach (var cena in relevantPrices)
                     {
                         // Računanje cene na osnovu broja noćenja
                         int brojNocenjaZaTajInterval = (datumDo - datumOd).Days;
@@ -389,7 +394,36 @@ namespace HotelManagment.Pages
                         MessageBox.Show($"Cena za period: {cenaZaTajPeriod:F2}", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
 
                         ukupnaCena += cenaZaTajPeriod;
-                    }
+                    }*/
+                    foreach (var cena in relevantPrices)
+                    {
+                        int brojNocenjaZaTajInterval = (datumDo - datumOd).Days;
+                        double cenaZaTajPeriod;
+
+                        // Ako je tip apartmana "Apartman", računaj samo po noćenjima
+                        if (string.Equals(selectedApartman.tipApartmana?.nazivTipaApartmana, "Apartman", StringComparison.OrdinalIgnoreCase))
+                        {
+                            cenaZaTajPeriod = (double)cena.cenaPoNoci * brojNocenjaZaTajInterval;
+                        }
+                        else
+                        {
+                            // Inače pomnoži i sa brojem gostiju
+                            if (!int.TryParse(GuestCountComboBox.Text, out int brojGostiju) || brojGostiju <= 0)
+                            {
+                                MessageBox.Show("Unesite validan broj gostiju.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                return;
+                            }
+
+                            cenaZaTajPeriod = (double)cena.cenaPoNoci * brojNocenjaZaTajInterval * brojGostiju;
+                        }
+
+                        MessageBox.Show($"Cena za period: {cenaZaTajPeriod:F2}", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        ukupnaCena += cenaZaTajPeriod;
+                    }                   
+
+                    // Množenje ukupne cene sa brojem gostiju
+                    //ukupnaCena *= brojGostiju;
                     // Dobijanje popusta iz ComboBoxa
                     string selectedDiscountText = (DiscountComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
                     double popustProcenat = 0;

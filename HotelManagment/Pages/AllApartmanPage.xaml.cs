@@ -317,7 +317,8 @@ namespace HotelManagment.Pages
                         r.krajnjiDatum >= krajnjiDatum.Value);
 
                     bool delimičnoZauzet = rezervacijeApartmana.Any(r =>
-                        pocetniDatum.Value < r.krajnjiDatum && krajnjiDatum.Value > r.pocetniDatum);
+                        pocetniDatum.Value <= r.krajnjiDatum && 
+                        krajnjiDatum.Value > r.pocetniDatum);
 
                     if (trazimoZauzete)
                     {
@@ -359,6 +360,74 @@ namespace HotelManagment.Pages
         }
 
         private async Task PopuniTermine(Apartman apartman, List<Rezervacija> sveRezervacije)
+        {
+            if (apartman == null || sveRezervacije == null)
+                return;
+
+            DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
+            DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
+
+            if (!pocetniDatum.HasValue || !krajnjiDatum.HasValue)
+            {
+                apartman.ZauzetiTermini = "Nema selektovanog perioda";
+                apartman.SlobodniTermini = "Nema selektovanog perioda";
+                return;
+            }
+
+            var rezervacijeApartmana = sveRezervacije
+                .Where(r => r.apartmanId == apartman.apartmanId && r.pocetniDatum != null && r.krajnjiDatum != null)
+                .Where(r => (r.pocetniDatum <= krajnjiDatum && r.krajnjiDatum >= pocetniDatum))
+                .OrderBy(r => r.pocetniDatum)
+                .ToList();
+
+            List<(DateTime, DateTime)> zauzetiPeriodi = rezervacijeApartmana
+                .Select(r => (r.pocetniDatum, r.krajnjiDatum))
+                .Where(p => p.Item1 <= p.Item2)
+                .ToList();
+
+            List<(DateTime, DateTime)> slobodniPeriodi = new List<(DateTime, DateTime)>();
+
+            DateTime trenutniPocetak = pocetniDatum.Value;
+
+            foreach (var (zPocetak, zKraj) in zauzetiPeriodi)
+            {
+                // Ako je trenutniPocetak pre nego što je počeo zauzeti period
+                if (trenutniPocetak < zPocetak)
+                {
+                    slobodniPeriodi.Add((trenutniPocetak, zPocetak.AddDays(-1))); // Slobodan period do početka zauzetog perioda
+                }
+
+                // Pomeri trenutniPocetak na kraj zauzetog perioda
+                if (trenutniPocetak <= zKraj)
+                {
+                    trenutniPocetak = zKraj; // Postavi trenutniPocetak na kraj zauzetog perioda, bez dodavanja dana
+                }
+            }
+
+            // Ako posle poslednjeg zauzetog termina još ima slobodnog perioda
+            if (trenutniPocetak <= krajnjiDatum.Value)
+            {
+                slobodniPeriodi.Add((trenutniPocetak, krajnjiDatum.Value)); // Dodaj poslednji slobodan period
+            }
+
+            // Popuni zauzete termine
+            apartman.ZauzetiTermini = zauzetiPeriodi.Any()
+                ? string.Join("\n", zauzetiPeriodi.Select(p =>
+                    (p.Item1.Date == p.Item2.Date)
+                        ? $"Jedna noć {p.Item1:dd.MM.}" // Ako je zauzeti period samo jedan dan
+                        : $"{p.Item1:dd.MM.}-{p.Item2:dd.MM.}")) // Ako je period duži, koristi opseg
+                : "Nema rezervacija";
+
+            // Popuni slobodne termine
+            apartman.SlobodniTermini = slobodniPeriodi.Any()
+                ? string.Join("\n", slobodniPeriodi.Select(p =>
+                    (p.Item1.Date == p.Item2.Date)
+                        ? $"Jedna noć {p.Item1:dd.MM.}" // Ako je slobodan period samo jedan dan
+                        : $"{p.Item1:dd.MM.}-{p.Item2:dd.MM.}")) // Ako je period duži, koristi opseg
+                : "Nema slobodnih termina";
+        }
+
+        /*private async Task PopuniTermine(Apartman apartman, List<Rezervacija> sveRezervacije)
         {
             if (apartman == null || sveRezervacije == null)
                 return;
@@ -416,7 +485,7 @@ namespace HotelManagment.Pages
             apartman.SlobodniTermini = slobodniPeriodi.Any()
                 ? string.Join("\n", slobodniPeriodi.Select(p => $"{p.Item1:dd.MM.}-{p.Item2:dd.MM.}"))
                 : "Nema slobodnih termina";
-        }
+        }*/
 
         private async void TipApartmanaFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -426,11 +495,40 @@ namespace HotelManagment.Pages
             }
         }
 
-        private async void DatumFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        /*private async void DatumFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && PocetniDatumPicker.SelectedDate.HasValue && KrajnjiDatumPicker.SelectedDate.HasValue)
             {
                 await FiltrirajApartmane();
+            }
+        }*/
+        private async void DatumFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                if (PocetniDatumPicker.SelectedDate.HasValue)
+                {
+                    // Postavi minimalni datum za krajnji datum na vrednost početnog datuma
+                    KrajnjiDatumPicker.DisplayDateStart = PocetniDatumPicker.SelectedDate.Value;
+
+                    // Ako korisnik odabere loš datum za krajnji datum, poništi ga
+                    if (KrajnjiDatumPicker.SelectedDate.HasValue &&
+                        KrajnjiDatumPicker.SelectedDate.Value < PocetniDatumPicker.SelectedDate.Value)
+                    {
+                        KrajnjiDatumPicker.SelectedDate = null;
+                    }
+
+                    // Blokiraj sve datume pre početnog datuma na krajnjem DatePickeru
+                    KrajnjiDatumPicker.BlackoutDates.Clear();
+                    KrajnjiDatumPicker.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, PocetniDatumPicker.SelectedDate.Value.AddDays(-1)));
+                }
+
+                // Proveri da li su oba datuma postavljena
+                if (PocetniDatumPicker.SelectedDate.HasValue && KrajnjiDatumPicker.SelectedDate.HasValue)
+                {
+                    // Poziv asinhrone metode za filtriranje apartmana
+                    await FiltrirajApartmane();
+                }
             }
         }
 

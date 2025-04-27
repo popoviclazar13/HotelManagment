@@ -239,7 +239,27 @@ namespace HotelManagment.Pages
         private void DatumFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
+            {
+                if (PocetniDatumPicker.SelectedDate.HasValue)
+                {
+                    // Postavi minimalni datum za krajnji datum na vrednost početnog datuma
+                    KrajnjiDatumPicker.DisplayDateStart = PocetniDatumPicker.SelectedDate.Value;
+
+                    // Ako korisnik odabere loš datum za krajnji datum, poništi ga
+                    if (KrajnjiDatumPicker.SelectedDate.HasValue &&
+                        KrajnjiDatumPicker.SelectedDate.Value < PocetniDatumPicker.SelectedDate.Value)
+                    {
+                        KrajnjiDatumPicker.SelectedDate = null;
+                    }
+
+                    // Blokiraj sve datume pre početnog datuma na krajnjem DatePickeru
+                    KrajnjiDatumPicker.BlackoutDates.Clear();
+                    KrajnjiDatumPicker.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, PocetniDatumPicker.SelectedDate.Value.AddDays(-1)));
+                }
+
+                // Poziv metode za filtriranje rezervacija
                 FiltrirajRezervacije();
+            }
         }
         private void PocetniDatumRezervacijePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

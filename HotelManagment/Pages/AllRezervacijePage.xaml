@@ -130,7 +130,7 @@
                 <DataGridTextColumn Header="Datum Od" Width="100" Binding="{Binding pocetniDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
                 <DataGridTextColumn Header="Datum Do" Width="100" Binding="{Binding krajnjiDatum, StringFormat=\{0:dd.MM.yyyy\}}" />
                 <DataGridTextColumn Header="Broj Gostiju" Width="100" Binding="{Binding brojGostiju}" />
-                <DataGridTextColumn Header="Cena" Width="55" Binding="{Binding cenaKonacna, StringFormat={}{0:F2}}" />
+                <DataGridTextColumn Header="Cena" Width="70" Binding="{Binding cenaKonacna, StringFormat={}{0:N2}}" />
                 <DataGridTextColumn Header="Plaćeno" Width="75" Binding="{Binding PlacenoTekst}" />
                 <DataGridTextColumn Header="Način Plačanja" Width="120" Binding="{Binding nacinPlacanja}" />
                 <DataGridTextColumn Header="Provizija" Width="80" Binding="{Binding iznosProvizije}" />

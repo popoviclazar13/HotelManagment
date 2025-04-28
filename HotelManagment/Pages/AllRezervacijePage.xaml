@@ -36,9 +36,14 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,10">
             <Button x:Name="KreirajRezervacijuButton" Content="Kreiraj Rezervaciju" Width="150" Margin="0,0,150,0" Click="KreirajRezervacijuButton_Click"/>
 
-            <ComboBox x:Name="AgencijaFilterComboBox" Width="150" Margin="0,0,10,0"
-                      SelectionChanged="AgencijaFilterComboBox_SelectionChanged">
+            <ComboBox x:Name="AgencijaFilterComboBox" Width="140" Margin="0,0,10,0"
+                      SelectionChanged="AgencijaFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
                 <ComboBoxItem IsSelected="True" Content="Odaberite agenciju" />
+            </ComboBox>
+
+            <ComboBox x:Name="ApartmanFilterComboBox" Width="140" Margin="0,0,10,0"
+          SelectionChanged="ApartmanFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
+                <ComboBoxItem IsSelected="True" Content="Odaberite apartman" />
             </ComboBox>
 
             <ComboBox x:Name="PlacenoFilterComboBox" Width="180" Margin="0,0,10,0"
@@ -48,7 +53,7 @@
                 <ComboBoxItem Content="Nije plaćeno" />
             </ComboBox>
 
-            <ComboBox x:Name="NacinPlacanjaFilterComboBox" Width="160" SelectionChanged="NacinPlacanjaFilterComboBox_SelectionChanged">
+            <ComboBox x:Name="NacinPlacanjaFilterComboBox" Width="180" SelectionChanged="NacinPlacanjaFilterComboBox_SelectionChanged">
                 <ComboBoxItem IsSelected="True" Content="Odaberite način plaćanja" />
                 <ComboBoxItem Content="Keš" />
                 <ComboBoxItem Content="Kartica" />

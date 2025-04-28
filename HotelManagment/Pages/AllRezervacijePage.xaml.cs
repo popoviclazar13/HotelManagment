@@ -36,6 +36,7 @@ namespace HotelManagment.Pages
         private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
         private readonly IUslugaService _uslugaService;
         private List<Rezervacija> _sveRezervacije = new List<Rezervacija>();
+        private List<Apartman> _sviApartmani = new List<Apartman>();
         public AllRezervacijePage(IRezervacijaService rezervacijaService, IApartmanService apartmanService, IKorisnikService korisnikService, IAgencijaService agencijaService, IPopustService popustService, ICenaApartmanaService cenaApartmanaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, IUslugaService uslugaService)
         {
             InitializeComponent();
@@ -58,6 +59,7 @@ namespace HotelManagment.Pages
                 _sveRezervacije = rezervacije.ToList(); // Save the fetched reservations
                 RezervacijeDataGrid.ItemsSource = rezervacije;
                 PopuniComboBoxAgencija(); // Populate the Agencija combo box here
+                PopuniComboBoxApartman();
             }
             catch (Exception ex)
             {
@@ -105,6 +107,45 @@ namespace HotelManagment.Pages
             // Set the default selected index
             AgencijaFilterComboBox.SelectedIndex = 0;
         }
+        private async void PopuniComboBoxApartman()
+        {
+            try
+            {
+                // Prvo učitavamo sve apartmane iz baze
+                _sviApartmani = await _apartmanService.GetAllApartman();
+
+                if (_sviApartmani == null || !_sviApartmani.Any())
+                {
+                    MessageBox.Show("Nema dostupnih apartmana.", "Obaveštenje", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                // Uzimamo sve nazive apartmana
+                var apartmani = _sviApartmani
+                    .Select(a => a.nazivApartmana)
+                    .Distinct()
+                    .ToList();
+
+                // Očistimo prethodne stavke u ComboBox-u
+                ApartmanFilterComboBox.Items.Clear();
+
+                // Dodamo default opciju
+                ApartmanFilterComboBox.Items.Add("Odaberite apartman");
+
+                // Dodamo sve apartmane u ComboBox
+                foreach (var apartman in apartmani)
+                {
+                    ApartmanFilterComboBox.Items.Add(apartman);
+                }
+
+                // Postavimo default izabrani indeks
+                ApartmanFilterComboBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Greška pri učitavanju apartmana: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void FiltrirajRezervacije()
         {
             var filtriraneRezervacije = _sveRezervacije.AsEnumerable();
@@ -114,6 +155,13 @@ namespace HotelManagment.Pages
             if (selectedAgencija != null && selectedAgencija != "Odaberite agenciju")
             {
                 filtriraneRezervacije = filtriraneRezervacije.Where(r => r.agencija != null && r.agencija.nazivAgencije == selectedAgencija);
+            }
+
+            // Filtriranje po Apartmanu
+            var selectedApartman = ApartmanFilterComboBox.SelectedItem as string;
+            if (selectedApartman != null && selectedApartman != "Odaberite apartman")
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.apartman != null && r.apartman.nazivApartmana == selectedApartman);
             }
 
             // Filtriranje po statusu plaćanja
@@ -198,6 +246,11 @@ namespace HotelManagment.Pages
             if (IsLoaded)
                 FiltrirajRezervacije();
         }
+        private void ApartmanFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+                FiltrirajRezervacije();
+        }
 
         private void PlacenoFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -225,6 +278,7 @@ namespace HotelManagment.Pages
             AgencijaFilterComboBox.SelectedIndex = 0;
             PlacenoFilterComboBox.SelectedIndex = 0;
             NacinPlacanjaFilterComboBox.SelectedIndex = 0;
+            ApartmanFilterComboBox.SelectedIndex = 0;
 
             // Reset date pickers
             PocetniDatumPicker.SelectedDate = null;

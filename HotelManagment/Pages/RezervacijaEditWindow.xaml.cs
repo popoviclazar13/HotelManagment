@@ -105,7 +105,7 @@ namespace HotelManagment.Pages
                 MessageBox.Show($"Greška pri učitavanju podataka: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        /*private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SelectedReservation.pocetniDatum = StartDatePicker.SelectedDate ?? SelectedReservation.pocetniDatum;
             SelectedReservation.krajnjiDatum = EndDatePicker.SelectedDate ?? SelectedReservation.krajnjiDatum;
@@ -169,6 +169,88 @@ namespace HotelManagment.Pages
             }
 
             NavigationService.GoBack();
+        }*/
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Prvo, pripremimo vrednosti koje bi korisnik hteo da upiše
+            var noviPocetniDatum = StartDatePicker.SelectedDate ?? SelectedReservation.pocetniDatum;
+            var noviKrajnjiDatum = EndDatePicker.SelectedDate ?? SelectedReservation.krajnjiDatum;
+            var noviApartman = ApartmanComboBox.SelectedItem as Apartman ?? SelectedReservation.apartman;
+
+            // Provera da li novi period zauzima apartman
+            var rezervacijeZaApartman = await _rezervacijaService.GetRezervacijeByApartmanId(noviApartman.apartmanId);
+
+            // Isključujemo trenutnu rezervaciju iz provere
+            rezervacijeZaApartman = rezervacijeZaApartman.Where(r => r.rezervacijaId != SelectedReservation.rezervacijaId).ToList();
+
+            bool zauzeto = rezervacijeZaApartman.Any(r =>
+                (noviPocetniDatum < r.krajnjiDatum) && (noviKrajnjiDatum > r.pocetniDatum)
+            );
+
+            if (zauzeto)
+            {
+                MessageBox.Show("Apartman je zauzet u izabranom periodu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                return; // Prekidamo dalje izvršavanje ako ima preklapanja
+            }
+
+            // Ako je sve u redu, sad ažuriramo podatke
+            SelectedReservation.pocetniDatum = noviPocetniDatum;
+            SelectedReservation.krajnjiDatum = noviKrajnjiDatum;
+            SelectedReservation.brojGostiju = (int)(GuestCountComboBox.SelectedItem ?? SelectedReservation.brojGostiju);
+            SelectedReservation.cenaKonacna = double.TryParse(PriceTextBox.Text, out double cenaKonacna) ? cenaKonacna : SelectedReservation.cenaKonacna;
+            SelectedReservation.nacinPlacanja = (PaymentMethodComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            SelectedReservation.iznosProvizije = double.TryParse(CommissionAmountTextBox.Text, out double iznosProvizije) ? iznosProvizije : SelectedReservation.iznosProvizije;
+            SelectedReservation.placeno = PaidCheckBox.IsChecked ?? SelectedReservation.placeno;
+            SelectedReservation.komentar = CommentTextBox.Text ?? SelectedReservation.komentar;
+
+            SelectedReservation.korisnik = UserComboBox.SelectedItem as Korisnik;
+            SelectedReservation.agencija = AgencyComboBox.SelectedItem as Agencija;
+            SelectedReservation.apartman = noviApartman;
+
+            try
+            {
+                // Ažuriranje usluga povezane sa rezervacijom
+                var postojeceRezervacijaUsluge = await _rezervacijaUslugaService.GetRezervacijaUslugaByRezervacijaId(SelectedReservation.rezervacijaId);
+                var selectedServices = ServicesComboBox.SelectedItems.Cast<Usluga>().ToList();
+
+                // Brišemo usluge koje više nisu selektovane
+                foreach (var rezervacijaUsluga in postojeceRezervacijaUsluge)
+                {
+                    if (!selectedServices.Any(s => s.uslugaId == rezervacijaUsluga.uslugaId))
+                    {
+                        await _rezervacijaUslugaService.DeleteRezervacijaUsluga(rezervacijaUsluga.rezervacijaUslugaId);
+                    }
+                }
+
+                // Dodajemo nove usluge koje nisu bile povezane
+                foreach (var service in selectedServices)
+                {
+                    if (!postojeceRezervacijaUsluge.Any(r => r.uslugaId == service.uslugaId))
+                    {
+                        var rezervacijaUsluga = new RezervacijaUsluga
+                        {
+                            rezervacijaId = SelectedReservation.rezervacijaId,
+                            uslugaId = service.uslugaId,
+                            kolicina = 0, // Ovde možeš postaviti default kolicinu
+                            datum = DateTime.Now
+                        };
+
+                        await _rezervacijaUslugaService.AddRezervacijaUsluga(rezervacijaUsluga);
+                    }
+                }
+
+                // Konačno ažuriramo rezervaciju u bazi
+                await _rezervacijaService.UpdateRezervacija(SelectedReservation);
+
+                MessageBox.Show("Rezervacija je uspešno ažurirana!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                _reloadDataAction(); // Osvežavanje prikaza
+                NavigationService.GoBack(); // Povratak nazad
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Došlo je do greške: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {

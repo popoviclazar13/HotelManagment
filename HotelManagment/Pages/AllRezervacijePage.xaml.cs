@@ -223,6 +223,12 @@ namespace HotelManagment.Pages
                 // Filtriranje samo po krajnjem datumu rezervacije
                 filtriraneRezervacije = filtriraneRezervacije.Where(r => r.krajnjiDatum.Date == krajnjiDatumRezervacije.Value.Date);
             }
+            // Filtriranje po imenu gosta (ako je tekst unet u GostPretragaTextBox)
+            string filterText = GostPretragaTextBox.Text.ToLower();
+            if (!string.IsNullOrWhiteSpace(filterText))
+            {
+                filtriraneRezervacije = filtriraneRezervacije.Where(r => r.korisnik.imePrezime.ToLower().Contains(filterText));
+            }
 
             // Ažuriranje DataGrid-a sa filtriranim rezervacijama
             RezervacijeDataGrid.ItemsSource = filtriraneRezervacije.ToList();
@@ -236,8 +242,8 @@ namespace HotelManagment.Pages
             // Izračunavanje bruto cene (Ukupna cena - ukupna provizija)
             double brutoCena = ukupnaCena - ukupnaProvizija;
 
-            UkupnaCenaTextBlock.Text = $"Bruto cena: {ukupnaCena:F2} EUR";
-            NetoCenaTextBlock.Text = $"Neto cena: {brutoCena:F2} EUR";
+            UkupnaCenaTextBlock.Text = $"Bruto cena: {ukupnaCena:N2} EUR";
+            NetoCenaTextBlock.Text = $"Neto cena: {brutoCena:N2} EUR";
         }
 
 
@@ -286,6 +292,8 @@ namespace HotelManagment.Pages
             //Reset date pickers
             PocetniDatumRezervacijePicker.SelectedDate = null;
             KrajnjiDatumRezervacijePicker.SelectedDate = null;
+            //Pretraga gosta
+            GostPretragaTextBox.Text = null;
 
             // Refresh the reservation list without any filters applied
             FiltrirajRezervacije();
@@ -359,6 +367,15 @@ namespace HotelManagment.Pages
             // Logika za filtriranje rezervacija koje se završavaju na selectedDate
             var filteredReservations = await _rezervacijaService.GetRezervacijeByKrajnjiDatum(endDate);
             RezervacijeDataGrid.ItemsSource = filteredReservations;
+        }
+
+        private void GostPretragaTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Prikaz/sakrivanje placeholdera
+            GostPlaceholderText.Visibility = string.IsNullOrWhiteSpace(GostPretragaTextBox.Text)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            FiltrirajRezervacije();
         }
         private async void ExportToExcel_Click(object sender, RoutedEventArgs e)
         {

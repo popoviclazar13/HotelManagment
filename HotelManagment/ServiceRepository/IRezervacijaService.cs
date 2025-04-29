@@ -18,5 +18,6 @@ namespace HotelManagment.ServiceRepository
         Task<List<Rezervacija>> GetRezervacijeByApartmanId(int id);
         Task<List<Rezervacija>> GetRezervacijeByPocetniDatum(DateTime pocetniDatum);
         Task<List<Rezervacija>> GetRezervacijeByKrajnjiDatum(DateTime krajnjiDatum);
+        Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync();
     }
 }

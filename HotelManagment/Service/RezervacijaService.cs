@@ -121,5 +121,48 @@ namespace HotelManagment.Service
             // Pretpostavljamo da imamo repository metod koji vraća rezervacije koje se završavaju na datom datumu
             return await _rezervacijaRepository.GetAllAsync(r => r.krajnjiDatum.Date == krajnjiDatum.Date);
         }
+
+        public async Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync()
+        {
+            var sveRezervacije = await _rezervacijaRepository.GetAllAsync();
+
+            var predlozi = new List<RezervacijaPredlog>();
+
+            var grupisanoPoApartmanu = sveRezervacije
+                .GroupBy(r => r.apartmanId)
+                .ToList();
+
+            foreach (var grupa in grupisanoPoApartmanu)
+            {
+                var rezervacije = grupa.OrderBy(r => r.pocetniDatum).ToList();
+
+                for (int i = 0; i < rezervacije.Count - 1; i++)
+                {
+                    var trenutna = rezervacije[i];
+                    var sledeca = rezervacije[i + 1];
+
+                    var razmak = (sledeca.pocetniDatum - trenutna.krajnjiDatum).Days;
+
+                    if (razmak >= 1 && razmak <= 3)
+                    {
+                        var duzina = (sledeca.krajnjiDatum - sledeca.pocetniDatum).Days;
+                        var noviPocetak = trenutna.krajnjiDatum;
+                        var noviKraj = noviPocetak.AddDays(duzina);
+
+                        predlozi.Add(new RezervacijaPredlog
+                        {
+                            RezervacijaId = sledeca.rezervacijaId,
+                            ApartmanId = sledeca.apartmanId,
+                            StariPocetak = sledeca.pocetniDatum,
+                            StariKraj = sledeca.krajnjiDatum,
+                            NoviPocetak = noviPocetak,
+                            NoviKraj = noviKraj
+                        });
+                    }
+                }
+            }
+
+            return predlozi;
+        }
     }
 }

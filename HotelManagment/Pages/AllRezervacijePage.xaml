@@ -9,91 +9,107 @@
       Title="AllRezervacijePage" Background="#faf6f4">
 
     <Grid>
-        <!-- Definišemo redove -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Naslov -->
             <RowDefinition Height="Auto"/>
-            <!-- Prvi StackPanel sa filterima -->
             <RowDefinition Height="Auto"/>
-            <!-- Drugi StackPanel sa datumima -->
             <RowDefinition Height="Auto"/>
-            <!-- DataGrid zauzima ostatak prostora, ograničena visina -->
             <RowDefinition Height="*"/>
-            <!-- TextBlock za ukupnu cenu -->
             <RowDefinition Height="Auto"/>
-            <!-- Za dugme za izvoz u excel -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Naslov -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
-            <TextBlock Text="Lista Rezervacija" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,20" Grid.Row="0"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
+            <TextBlock Text="Lista Rezervacija" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,20"/>
             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" Margin="15,0,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#f8b745"/>
         </StackPanel>
 
-        <!-- ComboBox-ovi u horizontalnom rasporedu -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,10,0,10">
+        <!-- ComboBox Filteri -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Margin="0,0,0,0">
             <Button x:Name="KreirajRezervacijuButton" Content="Kreiraj Rezervaciju" Width="150" Margin="0,0,150,0" Click="KreirajRezervacijuButton_Click"/>
-
-            <ComboBox x:Name="AgencijaFilterComboBox" Width="140" Margin="0,0,10,0"
-                      SelectionChanged="AgencijaFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
+            <ComboBox x:Name="AgencijaFilterComboBox" Width="140" Margin="0,0,10,0" SelectionChanged="AgencijaFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
                 <ComboBoxItem IsSelected="True" Content="Odaberite agenciju" />
             </ComboBox>
-
-            <ComboBox x:Name="ApartmanFilterComboBox" Width="140" Margin="0,0,10,0"
-          SelectionChanged="ApartmanFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
+            <ComboBox x:Name="ApartmanFilterComboBox" Width="140" Margin="0,0,10,0" SelectionChanged="ApartmanFilterComboBox_SelectionChanged" MaxDropDownHeight="150">
                 <ComboBoxItem IsSelected="True" Content="Odaberite apartman" />
             </ComboBox>
-
-            <ComboBox x:Name="PlacenoFilterComboBox" Width="180" Margin="0,0,10,0"
-                      SelectionChanged="PlacenoFilterComboBox_SelectionChanged">
+            <ComboBox x:Name="PlacenoFilterComboBox" Width="180" Margin="0,0,10,0" SelectionChanged="PlacenoFilterComboBox_SelectionChanged">
                 <ComboBoxItem IsSelected="True" Content="Odaberite status plaćanja" />
                 <ComboBoxItem Content="Plaćeno" />
                 <ComboBoxItem Content="Nije plaćeno" />
             </ComboBox>
-
             <ComboBox x:Name="NacinPlacanjaFilterComboBox" Width="180" SelectionChanged="NacinPlacanjaFilterComboBox_SelectionChanged">
                 <ComboBoxItem IsSelected="True" Content="Odaberite način plaćanja" />
                 <ComboBoxItem Content="Keš" />
                 <ComboBoxItem Content="Kartica" />
             </ComboBox>
-
             <Button x:Name="OcistiFiltereButton" Content="Ocisti Filtere" Width="150" Margin="150,0,0,0" Click="OcistiFiltereButton_Click"/>
         </StackPanel>
 
+        <!-- Datum filteri -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Margin="0,10,0,10">
             <TextBlock Text="Od datuma:" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <DatePicker x:Name="PocetniDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
-
             <TextBlock Text="Do datuma:" VerticalAlignment="Center" Margin="10,0,10,0"/>
             <DatePicker x:Name="KrajnjiDatumPicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="DatumFilter_SelectionChanged"/>
         </StackPanel>
 
-        <!-- Dva nova DatePicker-a za filtriranje prema početnom i krajnjem datumu rezervacije -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,10">
-            <TextBlock Text="Početak na datum:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <DatePicker x:Name="PocetniDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="PocetniDatumRezervacijePicker_SelectionChanged"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,0,0,10">
+            <!-- Pretraga po imenu i prezimenu gosta (prvo) -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="-120,0,10,0">
+                <Grid Width="150">
+                    <Grid>
+                        <!-- TextBox -->
+                        <TextBox x:Name="GostPretragaTextBox"
+                         Margin="0"
+                         Padding="5,0,25,0"
+                         VerticalContentAlignment="Center"
+                         FontSize="13"
+                         TextChanged="GostPretragaTextBox_TextChanged"/>
 
-            <TextBlock Text="Završava se na datum:" VerticalAlignment="Center" Margin="10,0,10,0"/>
-            <DatePicker x:Name="KrajnjiDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="KrajnjiDatumRezervacijePicker_SelectionChanged"/>
+                        <!-- Placeholder -->
+                        <TextBlock x:Name="GostPlaceholderText"
+                           Text=" Pretražite gosta"
+                           Foreground="Gray"
+                           Margin="5,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="13"
+                           IsHitTestVisible="False"
+                           Visibility="Visible"/>
+
+                        <!-- Ikonica lupe (Segoe MDL2 Assets) -->
+                        <TextBlock FontFamily="Segoe MDL2 Assets"
+                           Text="&#xE721;"
+                           FontSize="16"
+                           Foreground="Gray"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,0"
+                           IsHitTestVisible="False"/>
+                    </Grid>
+                </Grid>
+            </StackPanel>
+
+            <!-- Početak na datum -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,10,0">
+                <TextBlock Text="Početak na datum:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="PocetniDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="PocetniDatumRezervacijePicker_SelectionChanged"/>
+            </StackPanel>
+
+            <!-- Završava se na datum -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,10,0">
+                <TextBlock Text="Završava se na datum:" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                <DatePicker x:Name="KrajnjiDatumRezervacijePicker" Width="150" Margin="0,0,10,0" SelectedDateChanged="KrajnjiDatumRezervacijePicker_SelectionChanged"/>
+            </StackPanel>
         </StackPanel>
 
-        <!-- DataGrid pomeren u Grid.Row="4", maksimalna visina 500 -->
-        <DataGrid x:Name="RezervacijeDataGrid"
-          Margin="20"
-          MaxWidth="1250"
-          HorizontalAlignment="Center"
-          VerticalAlignment="Top"
-          AutoGenerateColumns="False"
-          CanUserAddRows="False"
-          SelectionChanged="RezervacijeDataGrid_SelectionChanged"
-          Grid.Row="4"
-          MaxHeight="400"
-          SelectionMode="Single"
-          SelectionUnit="FullRow"
-          RowBackground="#faf6f4">
-
+        <!-- DataGrid -->
+        <DataGrid x:Name="RezervacijeDataGrid" Grid.Row="4"
+                  Margin="20" MaxWidth="1250" HorizontalAlignment="Center"
+                  VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False"
+                  SelectionChanged="RezervacijeDataGrid_SelectionChanged" MaxHeight="400"
+                  SelectionMode="Single" SelectionUnit="FullRow" RowBackground="#faf6f4">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Foreground" Value="Black"/>
@@ -106,22 +122,19 @@
                             <ControlTemplate TargetType="DataGridRow">
                                 <Grid>
                                     <Border x:Name="DGR_Border" 
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}">
                                         <DataGridCellsPresenter/>
                                     </Border>
                                 </Grid>
                                 <ControlTemplate.Triggers>
-                                    <!-- Selektovani red -->
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="DGR_Border" Property="Background" Value="#c8e6c9"/>
                                         <Setter Property="Foreground" Value="Black"/>
                                     </Trigger>
-                                    <!-- Hover efekat (svetlo plava) -->
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="DGR_Border" Property="Background" Value="#add8e6"/>
-                                        <!-- Svetlo plava -->
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -143,14 +156,14 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Ukupna cena (Pomeren u Grid.Row="5") -->
-        <TextBlock x:Name="UkupnaCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,0,0,0">
-            Bruto cena: 0 EUR
-        </TextBlock>
-        <TextBlock x:Name="NetoCenaTextBlock" Grid.Row="5" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,0,500,0">
-            Neto cena: 0 EUR
-        </TextBlock>
+        <!-- Ukupna i Neto cena -->
+        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <TextBlock x:Name="UkupnaCenaTextBlock" FontSize="16" Margin="20,0">Bruto cena: 0 EUR</TextBlock>
+            <TextBlock x:Name="NetoCenaTextBlock" FontSize="16" Margin="20,0">Neto cena: 0 EUR</TextBlock>
+        </StackPanel>
+
+        <!-- Dugme za izvoz -->
         <Button x:Name="IzveziUExcelButton" Grid.Row="6" Content="Izvezi u Excel" Width="150" Height="30"
-        Margin="1000,0,0,10" HorizontalAlignment="Center" Click="ExportToExcel_Click"/>
+                Margin="1000,0,0,10" HorizontalAlignment="Center" Click="ExportToExcel_Click"/>
     </Grid>
 </Page>

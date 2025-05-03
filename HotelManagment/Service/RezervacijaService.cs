@@ -121,14 +121,19 @@ namespace HotelManagment.Service
             // Pretpostavljamo da imamo repository metod koji vraća rezervacije koje se završavaju na datom datumu
             return await _rezervacijaRepository.GetAllAsync(r => r.krajnjiDatum.Date == krajnjiDatum.Date);
         }
-
-        public async Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync()
+        public async Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync(DateTime datumOd, DateTime datumDo, List<int> odabraniApartmani)
         {
-            var sveRezervacije = await _rezervacijaRepository.GetAllAsync();
-
+            var sveRezervacije = await _rezervacijaRepository.GetAllAsync(); // Ovde proveri da li Include-uješ Apartman entitet
             var predlozi = new List<RezervacijaPredlog>();
 
-            var grupisanoPoApartmanu = sveRezervacije
+            // Filtriraj rezervacije unutar datuma
+            var filtriraneRezervacije = sveRezervacije
+                .Where(r => r.pocetniDatum >= datumOd && r.krajnjiDatum <= datumDo)
+                .ToList();
+
+            // Grupisanje po apartmanu (samo odabrani)
+            var grupisanoPoApartmanu = filtriraneRezervacije
+                .Where(r => odabraniApartmani.Contains(r.apartmanId))
                 .GroupBy(r => r.apartmanId)
                 .ToList();
 
@@ -141,28 +146,108 @@ namespace HotelManagment.Service
                     var trenutna = rezervacije[i];
                     var sledeca = rezervacije[i + 1];
 
-                    var razmak = (sledeca.pocetniDatum - trenutna.krajnjiDatum).Days;
+                    var prazninaPocetak = trenutna.krajnjiDatum;
+                    var prazninaKraj = sledeca.pocetniDatum;
 
-                    if (razmak >= 1 && razmak <= 3)
+                    var razmak = (prazninaKraj - prazninaPocetak).Days;
+
+                    if (razmak >= 1)
                     {
-                        var duzina = (sledeca.krajnjiDatum - sledeca.pocetniDatum).Days;
-                        var noviPocetak = trenutna.krajnjiDatum;
-                        var noviKraj = noviPocetak.AddDays(duzina);
-
-                        predlozi.Add(new RezervacijaPredlog
+                        // Traži rezervaciju iz DRUGIH apartmana koja može stati u ovu prazninu
+                        foreach (var drugaRezervacija in filtriraneRezervacije)
                         {
-                            RezervacijaId = sledeca.rezervacijaId,
-                            ApartmanId = sledeca.apartmanId,
-                            StariPocetak = sledeca.pocetniDatum,
-                            StariKraj = sledeca.krajnjiDatum,
-                            NoviPocetak = noviPocetak,
-                            NoviKraj = noviKraj
-                        });
+                            if (drugaRezervacija.apartmanId == trenutna.apartmanId) continue; // Ne ista soba
+
+                            // Bez duplikata i sa validnim kapacitetom
+                            if (drugaRezervacija.pocetniDatum >= prazninaPocetak &&
+                                drugaRezervacija.krajnjiDatum <= prazninaKraj &&
+                                drugaRezervacija.apartman.kapacitetOdrasli <= trenutna.apartman.kapacitetOdrasli) // koristi kapacitet
+                            {
+                                // Spreči da se ista rezervacija predlaže više puta
+                                bool vecPostoji = predlozi.Any(p => p.RezervacijaId == drugaRezervacija.rezervacijaId);
+                                if (vecPostoji) continue;
+
+                                predlozi.Add(new RezervacijaPredlog
+                                {
+                                    RezervacijaId = drugaRezervacija.rezervacijaId,
+                                    ApartmanId = trenutna.apartmanId, // Apartman u koji želimo da prebacimo
+                                    StariPocetak = drugaRezervacija.pocetniDatum,
+                                    StariKraj = drugaRezervacija.krajnjiDatum,
+                                    NoviPocetak = prazninaPocetak,
+                                    NoviKraj = prazninaKraj
+                                });
+                            }
+                        }
                     }
                 }
             }
 
             return predlozi;
+        }
+        /*public async Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync(DateTime datumOd, DateTime datumDo, List<int> odabraniApartmani)
+        {
+            var sveRezervacije = await _rezervacijaRepository.GetAllAsync();
+            var predlozi = new List<RezervacijaPredlog>();
+
+            // Filtriraj sve rezervacije koje su unutar datuma Od - Do
+            var filtriraneRezervacije = sveRezervacije
+                .Where(r => r.pocetniDatum >= datumOd && r.krajnjiDatum <= datumDo)
+                .ToList();
+
+            // Grupisanje rezervacija po apartmanu
+            var grupisanoPoApartmanu = filtriraneRezervacije
+                .GroupBy(r => r.apartmanId)
+                .Where(g => odabraniApartmani.Contains(g.Key))  // Filtriraj samo odabrane apartmane
+                .ToList();
+
+            // Prolazak kroz svaki odabrani apartman
+            foreach (var grupa in grupisanoPoApartmanu)
+            {
+                var rezervacije = grupa.OrderBy(r => r.pocetniDatum).ToList();
+
+                // Traženje praznina između rezervacija u ovom apartmanu
+                for (int i = 0; i < rezervacije.Count - 1; i++)
+                {
+                    var trenutna = rezervacije[i];
+                    var sledeca = rezervacije[i + 1];
+
+                    var razmak = (sledeca.pocetniDatum - trenutna.krajnjiDatum).Days;
+
+                    // Ako postoji praznina između dve rezervacije
+                    if (razmak >= 1)
+                    {
+                        var prazninaPocetak = trenutna.krajnjiDatum;
+                        var prazninaKraj = sledeca.pocetniDatum;
+
+                        // Sada tražimo rezervaciju iz drugih apartmana koja bi mogla da se stavi u ovu prazninu
+                        foreach (var drugiApartman in filtriraneRezervacije.Where(r => r.apartmanId != trenutna.apartmanId))
+                        {
+                            // Provera da li kapacitet odgovara
+                            if (drugiApartman.apartman.kapacitetOdrasli <= (sledeca.apartman.kapacitetOdrasli - trenutna.apartman.kapacitetOdrasli) &&
+                                drugiApartman.pocetniDatum >= prazninaPocetak &&
+                                drugiApartman.krajnjiDatum <= prazninaKraj)
+                            {
+                                predlozi.Add(new RezervacijaPredlog
+                                {
+                                    RezervacijaId = drugiApartman.rezervacijaId,
+                                    ApartmanId = trenutna.apartmanId,  // Premesti rezervaciju u trenutni apartman
+                                    StariPocetak = drugiApartman.pocetniDatum,
+                                    StariKraj = drugiApartman.krajnjiDatum,
+                                    NoviPocetak = prazninaPocetak,
+                                    NoviKraj = prazninaKraj
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return predlozi;
+        }*/
+
+        public async Task<List<Rezervacija>> GetRezervacijaByKorisnikId(int id)
+        {
+            return await _rezervacijaRepository.GetAllAsync(r => r.korisnikId == id);
         }
     }
 }

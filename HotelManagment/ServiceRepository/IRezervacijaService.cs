@@ -16,8 +16,9 @@ namespace HotelManagment.ServiceRepository
         Task DeleteRezervacija(int id);
         Task<bool> CanDeleteRezervacijaAsync(int rezervacijaId);
         Task<List<Rezervacija>> GetRezervacijeByApartmanId(int id);
+        Task<List<Rezervacija>> GetRezervacijaByKorisnikId(int id);
         Task<List<Rezervacija>> GetRezervacijeByPocetniDatum(DateTime pocetniDatum);
         Task<List<Rezervacija>> GetRezervacijeByKrajnjiDatum(DateTime krajnjiDatum);
-        Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync();
+        Task<List<RezervacijaPredlog>> GenerisiPredlogeZaOptimizacijuAsync(DateTime datumOd, DateTime datumDo, List<int> odabraniApartmani);
     }
 }

@@ -119,6 +119,9 @@ namespace HotelManagment.Pages
         {
             NavigationService?.Navigate(new AllApartmanPage(_apartmanService, _rezervacijaService));
         }
-
+        private void Optimizacija_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Optimizacija(_rezervacijaService, _apartmanService));
+        }
     }
 }

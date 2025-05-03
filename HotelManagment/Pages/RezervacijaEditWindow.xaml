@@ -80,8 +80,8 @@
 
                 <!-- Treća kolona -->
                 <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="Korisnik:" Margin="5"/>
-                    <ComboBox x:Name="UserComboBox" Margin="5" DisplayMemberPath="imePrezime" SelectedValuePath="korisnikId" Width="250"/>
+                    <TextBlock Text="Gost:" Margin="5"/>
+                    <ComboBox x:Name="UserComboBox" Margin="5" DisplayMemberPath="imePrezime" SelectedValuePath="korisnikId" Width="250" IsEnabled="False"/>
                     <TextBlock Text="Apartman:" Margin="5"/>
                     <ComboBox x:Name="ApartmanComboBox" Margin="5" DisplayMemberPath="nazivApartmana" SelectedValuePath="apartmanId" Width="250"/>
                     <TextBlock Text="Agencija:" Margin="5"/>

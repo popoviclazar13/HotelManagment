@@ -10,6 +10,7 @@ namespace HotelManagment.Entitys
     {
         public int RezervacijaId { get; set; }
         public int ApartmanId { get; set; }
+        public int ApartmanUKojiIde { get; set; }
 
         public DateTime StariPocetak { get; set; }
         public DateTime StariKraj { get; set; }

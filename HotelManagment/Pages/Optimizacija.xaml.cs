@@ -78,10 +78,15 @@ namespace HotelManagment.Pages
                 }
 
                 // Priprema za prikaz u tabeli
-                var prikazPredloga = predlozi.Select(p => new
+                var prikazPredloga = predlozi
+                .Where(p =>
+                    selektovaniApartmani.Any(a => a.apartmanId == p.ApartmanId) &&
+                    selektovaniApartmani.Any(a => a.apartmanId == p.ApartmanUKojiIde))
+                .Select(p => new
                 {
                     p.RezervacijaId,
-                    ApartmanNaziv = selektovaniApartmani.FirstOrDefault(a => a.apartmanId == p.ApartmanId)?.nazivApartmana ?? "Nepoznat",
+                    IzApartmana = selektovaniApartmani.FirstOrDefault(a => a.apartmanId == p.ApartmanId)?.nazivApartmana ?? "Nepoznat",
+                    UApartman = selektovaniApartmani.FirstOrDefault(a => a.apartmanId == p.ApartmanUKojiIde)?.nazivApartmana ?? "Nepoznat",
                     StariPeriod = $"{p.StariPocetak:dd.MM.yyyy} - {p.StariKraj:dd.MM.yyyy}",
                     NoviPeriod = $"{p.NoviPocetak:dd.MM.yyyy} - {p.NoviKraj:dd.MM.yyyy}"
                 }).ToList();

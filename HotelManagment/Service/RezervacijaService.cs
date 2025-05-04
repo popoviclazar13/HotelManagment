@@ -170,7 +170,8 @@ namespace HotelManagment.Service
                                 predlozi.Add(new RezervacijaPredlog
                                 {
                                     RezervacijaId = drugaRezervacija.rezervacijaId,
-                                    ApartmanId = trenutna.apartmanId, // Apartman u koji želimo da prebacimo
+                                    ApartmanId = drugaRezervacija.apartmanId, // iz kog ide
+                                    ApartmanUKojiIde = trenutna.apartmanId,   // u koji ide
                                     StariPocetak = drugaRezervacija.pocetniDatum,
                                     StariKraj = drugaRezervacija.krajnjiDatum,
                                     NoviPocetak = prazninaPocetak,

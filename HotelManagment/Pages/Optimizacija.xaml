@@ -9,7 +9,7 @@
       Title="Optimizacija">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="700">
+        <StackPanel Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
 
             <!-- Naslov centriran -->
             <TextBlock Text="Optimizacija"
@@ -50,13 +50,14 @@
             <DataGrid x:Name="PredloziDataGrid"
                   AutoGenerateColumns="False"
                   Height="300"
-                  Width="650"
+                  Width="850"
                   Margin="0,0,0,20">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Rezervacija ID" Binding="{Binding RezervacijaId}" Width="*"/>
-                    <DataGridTextColumn Header="Apartman" Binding="{Binding ApartmanNaziv}" Width="*"/>
-                    <DataGridTextColumn Header="Stari period" Binding="{Binding StariPeriod}" Width="*"/>
-                    <DataGridTextColumn Header="Novi period" Binding="{Binding NoviPeriod}" Width="*"/>
+                    <DataGridTextColumn Header="Iz apartmana" Binding="{Binding IzApartmana}" Width="*"/>
+                    <DataGridTextColumn Header="U apartman" Binding="{Binding UApartman}" Width="*"/>
+                    <DataGridTextColumn Header="Period rezervacije" Binding="{Binding StariPeriod}" Width="*"/>
+                    <DataGridTextColumn Header="Slobodni period" Binding="{Binding NoviPeriod}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
 

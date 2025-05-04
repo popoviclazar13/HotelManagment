@@ -277,10 +277,10 @@ namespace HotelManagment.Pages
             {
                 if (int.TryParse(selectedKrevet, out int krevetValue))
                 {
-                    filtriraniApartmani = filtriraniApartmani.Where(a => a.ukupniKapacitet == krevetValue);
+                    filtriraniApartmani = filtriraniApartmani.Where(a => a.kapacitetOdrasli == krevetValue);
                 }
             }
-
+            //a.ukupniKapacitet
             DateTime? pocetniDatum = PocetniDatumPicker.SelectedDate;
             DateTime? krajnjiDatum = KrajnjiDatumPicker.SelectedDate;
 

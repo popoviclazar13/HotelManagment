@@ -38,7 +38,7 @@
                 <Button Width="100" Height="50" FontSize="16" Margin="10"
             Background="LightGray" Foreground="Black" Click="Usluge_Click">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16"  Foreground="DodgerBlue"/>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A5;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16"  Foreground="DodgerBlue"/>
                         <TextBlock Text="Usluge" VerticalAlignment="Center" FontSize="16"/>
                     </StackPanel>
                 </Button>
@@ -66,10 +66,10 @@
                     </StackPanel>
                 </Button>
 
-                <Button Width="100" Height="50" FontSize="16" Margin="10"
+                <Button Width="130" Height="50" FontSize="16" Margin="10"
             Background="LightGray" Foreground="Black" Click="Optimizacija_Click">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0"  Foreground="DodgerBlue"/>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0"  Foreground="DodgerBlue"/>
                         <TextBlock Text="Optimizacija" VerticalAlignment="Center" FontSize="16"/>
                     </StackPanel>
                 </Button>

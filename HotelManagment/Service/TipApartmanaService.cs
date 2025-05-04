@@ -39,9 +39,9 @@ namespace HotelManagment.Service
             throw new NotImplementedException();
         }
 
-        public Task<List<TipApartmana>> GetAllTipApartmana()
+        public async Task<List<TipApartmana>> GetAllTipApartmana()
         {
-            return _tipApartmanaRepository.GetAllAsync();
+            return await _tipApartmanaRepository.GetAllAsync();
         }
 
         public async Task<TipApartmana> GetByIdTipApartmana(int id)

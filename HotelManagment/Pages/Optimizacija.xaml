@@ -6,61 +6,85 @@
       xmlns:local="clr-namespace:HotelManagment.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Optimizacija">
+      Title="Optimizacija" Background="#faf6f4">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left">
+    <Grid>
+        <TextBlock Text="Optimizacija" FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
-            <!-- Naslov centriran -->
-            <TextBlock Text="Optimizacija"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Margin="0,0,0,20"
-                   HorizontalAlignment="Center"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,70,0,0">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,20" Width="800">
 
-            <!-- Odabir datuma -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="Od:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <DatePicker x:Name="DatumOdPicker" Margin="0,0,20,0"/>
-                <TextBlock Text="Do:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <DatePicker x:Name="DatumDoPicker"/>
+                <!-- Odabir datuma -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+                    <TextBlock Text="Od:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <DatePicker x:Name="DatumOdPicker" Margin="0,0,20,0"/>
+                    <TextBlock Text="Do:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <DatePicker x:Name="DatumDoPicker"/>
+                </StackPanel>
+
+                <!-- Sekcija sa filterima i listboxom -->
+
+                <StackPanel Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center" VerticalAlignment="Center" >
+
+                    <!-- ComboBox za Tip apartmana -->
+                    <StackPanel Margin="10,0">
+                        <ComboBox x:Name="TipApartmanaComboBox" Width="170" 
+                  SelectionChanged="Filter_Changed"
+                  DisplayMemberPath="Naziv"/>
+                    </StackPanel>
+
+                    <!-- ComboBox za broj kreveta -->
+                    <StackPanel Margin="10,0">
+                        <ComboBox x:Name="BrojKrevetaComboBox" Width="160" 
+                  SelectionChanged="Filter_Changed"/>
+                    </StackPanel>
+
+                    <!-- Dugme Odaberi sve -->
+                    <StackPanel Margin="10,0,100,0">
+
+                        <!-- prazan prostor zbog poravnanja -->
+                        <Button Content="Odaberi sve" Width="100" Click="OdaberiSve_Click"/>
+                    </StackPanel>
+                    <StackPanel >
+
+                        <!-- prazan prostor zbog poravnanja -->
+                        <Button Content="Ocisti filtere" Width="100" Click="Clear_Click"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Lista apartmana -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Height="120" Width="300">
+                    <ListBox x:Name="ApartmaniListBox"
+                 SelectionMode="Multiple"
+                 DisplayMemberPath="nazivApartmana"
+                 Height="120"/>
+                </ScrollViewer>
+
+                <!-- Dugme za generisanje -->
+                <Button Content="Generiši predloge"
+                        Width="150"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Margin="10"
+                        Click="GenerisiPredloge_Click"/>
+
+                <!-- Tabela predloga -->
+                <DataGrid x:Name="PredloziDataGrid"
+                          AutoGenerateColumns="False"
+                          MaxHeight="300"
+                          Margin="0,20,0,0"
+                          ScrollViewer.CanContentScroll="True"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Iz apartmana" Binding="{Binding IzApartmana}" Width="*"/>
+                        <DataGridTextColumn Header="U apartman" Binding="{Binding UApartman}" Width="*"/>
+                        <DataGridTextColumn Header="Period rezervacije" Binding="{Binding StariPeriod}" Width="*"/>
+                        <DataGridTextColumn Header="Slobodni period" Binding="{Binding NoviPeriod}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
             </StackPanel>
-
-            <!-- Lista apartmana bez opisa -->
-            <StackPanel Margin="-400,0,0,10">
-                <!-- Dodata gornja margina -->
-                <Border BorderBrush="Gray" BorderThickness="1" Height="120" Width="200">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListBox x:Name="ApartmaniListBox"
-                     SelectionMode="Multiple"
-                     DisplayMemberPath="nazivApartmana"/>
-                    </ScrollViewer>
-                </Border>
-            </StackPanel>
-
-            <!-- Dugme -->
-            <Button Content="Generiši predloge"
-                Width="150"
-                Height="30"
-                HorizontalAlignment="Left"
-                Margin="25,0,0,20"
-                Click="GenerisiPredloge_Click"/>
-
-            <!-- Tabela predloga -->
-            <DataGrid x:Name="PredloziDataGrid"
-                  AutoGenerateColumns="False"
-                  Height="300"
-                  Width="850"
-                  Margin="0,0,0,20">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Rezervacija ID" Binding="{Binding RezervacijaId}" Width="*"/>
-                    <DataGridTextColumn Header="Iz apartmana" Binding="{Binding IzApartmana}" Width="*"/>
-                    <DataGridTextColumn Header="U apartman" Binding="{Binding UApartman}" Width="*"/>
-                    <DataGridTextColumn Header="Period rezervacije" Binding="{Binding StariPeriod}" Width="*"/>
-                    <DataGridTextColumn Header="Slobodni period" Binding="{Binding NoviPeriod}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>

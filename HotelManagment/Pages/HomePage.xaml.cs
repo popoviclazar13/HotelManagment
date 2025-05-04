@@ -33,7 +33,8 @@ namespace HotelManagment.Pages
         private readonly IOpremaService _opremaService;
         private readonly IApartmanPopustService _apartmanPopustService;
         private readonly IRezervacijaUslugaService _rezervacijaUslugaService;
-        public HomePage(IZgradaService zgradaService, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IUslugaService uslugaService, IOpremaService opremaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService)
+        private readonly ITipApartmanaService _tipApartmanaService;
+        public HomePage(IZgradaService zgradaService, IApartmanService apartmanService, IPopustService popustService, IRezervacijaService rezervacijaService, IKorisnikService korisnikService, IAgencijaService agencijaService, ICenaApartmanaService cenaApartmanaService, IUslugaService uslugaService, IOpremaService opremaService, IApartmanPopustService apartmanPopustService, IRezervacijaUslugaService rezervacijaUslugaService, ITipApartmanaService tipApartmanaService)
         {
             InitializeComponent();
             _zgradaService = zgradaService;
@@ -47,6 +48,7 @@ namespace HotelManagment.Pages
             _opremaService = opremaService;
             _apartmanPopustService = apartmanPopustService;
             _rezervacijaUslugaService = rezervacijaUslugaService;
+            _tipApartmanaService = tipApartmanaService;
             LoadBuildings();
         }
 
@@ -121,7 +123,7 @@ namespace HotelManagment.Pages
         }
         private void Optimizacija_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new Optimizacija(_rezervacijaService, _apartmanService));
+            NavigationService?.Navigate(new Optimizacija(_rezervacijaService, _apartmanService, _tipApartmanaService));
         }
     }
 }

@@ -427,7 +427,7 @@ namespace HotelManagment.Pages
             // Navigate back to the previous page
             ImportFromExcel_Click();
         }
-        private async void ImportFromExcel_Click()
+        /*private async void ImportFromExcel_Click()
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -484,13 +484,6 @@ namespace HotelManagment.Pages
                             var sviApartmani = await _apartmanService.GetAllApartman();
                             var apartman = sviApartmani
                                 .FirstOrDefault(a => a.nazivApartmana.Trim().StartsWith(nazivApartmana, StringComparison.OrdinalIgnoreCase));
-
-                            if (apartman == null)
-                            {
-                                MessageBox.Show($"Nije pronađen apartman sa nazivom '{nazivApartmana}' u redu {row}.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                                sveRezervacijeUspele = false;
-                                continue;
-                            }
 
                             if (apartman == null)
                             {
@@ -694,8 +687,8 @@ namespace HotelManagment.Pages
                         "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-        }
-        /*private async void ImportFromExcel_Click()
+        }*/
+        private async void ImportFromExcel_Click()
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -713,7 +706,9 @@ namespace HotelManagment.Pages
                         var worksheet = package.Workbook.Worksheets[0];
                         int rowCount = worksheet.Dimension.Rows;
 
-                        for (int row = 2; row <= rowCount; row++) // preskače zaglavlje
+                        var rezervacijeKojeSeUvoze = new List<Rezervacija>(); // Lista rezervacija koje se uvoze
+
+                        for (int row = 2; row <= rowCount; row++) // preskaže zaglavlje
                         {
                             string gost = worksheet.Cells[row, 3].Text;
                             DateTime dolazak = DateTime.Parse(worksheet.Cells[row, 5].Text);
@@ -739,11 +734,81 @@ namespace HotelManagment.Pages
                                 sveRezervacijeUspele = false;
                                 continue;
                             }
+
                             string zahtevi = worksheet.Cells[row, 10].Text;
                             string zemlja = worksheet.Cells[row, 11].Text;
                             string nazivApartmana = worksheet.Cells[row, 12].Text.Trim();
                             string telefon = worksheet.Cells[row, 13].Text;
                             int brojGostiju = int.Parse(worksheet.Cells[row, 14].Text);
+
+                            // 2. Pronađi apartman
+                            var sviApartmani = await _apartmanService.GetAllApartman();
+                            Apartman apartman = null;
+                            if (string.IsNullOrWhiteSpace(nazivApartmana))
+                            {
+                                apartman = null;
+                            }
+                            else
+                            {
+                                apartman = sviApartmani
+                                    .FirstOrDefault(a => a.nazivApartmana.Trim().StartsWith(nazivApartmana, StringComparison.OrdinalIgnoreCase));
+                            }
+
+                            if (apartman == null)
+                            {
+                                var slobodniApartmani = new List<Apartman>();
+
+                                foreach (var a in sviApartmani)
+                                {
+                                    // Provera kapaciteta
+                                    if (a.kapacitetOdrasli < brojGostiju)
+                                        continue;
+
+                                    var rezervacijeZaApartman = await _rezervacijaService.GetRezervacijeByApartmanId(a.apartmanId);
+
+                                    bool apartmanZauzet = rezervacijeZaApartman.Any(r =>
+                                        r.pocetniDatum < odlazak && r.krajnjiDatum > dolazak);
+
+                                    if (!apartmanZauzet)
+                                    {
+                                        slobodniApartmani.Add(a);
+                                    }
+                                }
+
+                                if (slobodniApartmani.Any())
+                                {
+                                    apartman = slobodniApartmani.First();
+
+                                    MessageBox.Show($"Apartman sa nazivom '{nazivApartmana}' nije pronađen u redu {row}. " +
+                                                    $"Rezervacija je automatski dodeljena u slobodan apartman '{apartman.nazivApartmana}'.",
+                                                    "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Apartman sa nazivom '{nazivApartmana}' nije pronađen u redu {row}, a nijedan odgovarajući apartman nije slobodan za period {dolazak.ToShortDateString()} - {odlazak.ToShortDateString()}.",
+                                                    "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                                    sveRezervacijeUspele = false;
+                                    continue;
+                                }
+                            }
+
+                            // 3. Proveri kapacitet apartmana
+                            int kapacitetApartmana = apartman.kapacitetOdrasli; // ili kapacitet koji je relevantan za tvoje poslovanje
+
+                            if (brojGostiju > kapacitetApartmana)
+                            {
+                                MessageBox.Show($"Broj gostiju ({brojGostiju}) u redu {row} je veći od kapaciteta apartmana ({kapacitetApartmana}).", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                sveRezervacijeUspele = false;
+                                continue;
+                            }
+
+                            if (brojGostiju - kapacitetApartmana > 2)
+                            {
+                                MessageBox.Show($"Broj gostiju ({brojGostiju}) u redu {row} premašuje kapacitet apartmana ({kapacitetApartmana}) za više od 2. Molimo vas da unesete ispravan broj gostiju.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                sveRezervacijeUspele = false;
+                                continue;
+                            }
 
                             // 1. Pronađi ili dodaj korisnika
                             var korisnik = (await _korisnikService.GetAllKorisnik())
@@ -775,18 +840,6 @@ namespace HotelManagment.Pages
                                 }
                             }
 
-                            // 2. Pronađi apartman
-                            var sviApartmani = await _apartmanService.GetAllApartman();
-                            var apartman = sviApartmani
-                                .FirstOrDefault(a => a.nazivApartmana.Trim().StartsWith(nazivApartmana, StringComparison.OrdinalIgnoreCase));
-
-                            if (apartman == null)
-                            {
-                                MessageBox.Show($"Nije pronađen apartman sa nazivom '{nazivApartmana}' u redu {row}.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                                sveRezervacijeUspele = false;
-                                continue;
-                            }
-
                             // 3. Pronađi agenciju "Bez Agencije"
                             var sveAgencije = await _agencijaService.GetAllAgencija();
                             var agencijaBezAgencije = sveAgencije
@@ -800,7 +853,7 @@ namespace HotelManagment.Pages
                             }
 
                             // 4. Provera da li rezervacija već postoji
-                            var postojeceRezervacije = await _rezervacijaService.GetRezervacijeByApartmanId(apartman.apartmanId);
+                            var postojeceRezervacije = await _rezervacijaService.GetRezervacijaByKorisnikId(korisnik.korisnikId);
                             bool rezervacijaVecPostoji = postojeceRezervacije.Any(r =>
                                 r.korisnikId == korisnik.korisnikId &&
                                 r.pocetniDatum.Date == dolazak.Date &&
@@ -808,12 +861,33 @@ namespace HotelManagment.Pages
 
                             if (rezervacijaVecPostoji)
                             {
-                                // Preskoči ako već postoji ista rezervacija
-                                continue;
+                                // Pronađi postojeću rezervaciju
+                                var postojecaRezervacija = postojeceRezervacije
+                                    .FirstOrDefault(r => r.korisnikId == korisnik.korisnikId &&
+                                                         r.pocetniDatum.Date == dolazak.Date &&
+                                                         r.krajnjiDatum.Date == odlazak.Date);
+
+                                if (postojecaRezervacija != null)
+                                {
+                                    // Ažuriraj postojeću rezervaciju sa novim apartmanom
+                                    postojecaRezervacija.apartmanId = apartman.apartmanId;
+
+                                    try
+                                    {
+                                        await _rezervacijaService.UpdateRezervacija(postojecaRezervacija);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show($"Greška prilikom ažuriranja rezervacije za korisnika '{gost}'. Detalji: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        sveRezervacijeUspele = false;
+                                    }
+                                }
+                                continue;  // Nastavi sa sledećom rezervacijom
                             }
 
                             // 5. Provera da li je apartman zauzet u tom periodu
-                            bool jeZauzet = postojeceRezervacije.Any(r => r.pocetniDatum < odlazak && r.krajnjiDatum > dolazak);
+                            var postojeceRezervacijeApartmana = await _rezervacijaService.GetRezervacijeByApartmanId(apartman.apartmanId);
+                            bool jeZauzet = postojeceRezervacijeApartmana.Any(r => r.pocetniDatum < odlazak && r.krajnjiDatum > dolazak);
 
                             if (jeZauzet)
                             {
@@ -847,7 +921,23 @@ namespace HotelManagment.Pages
                                 continue;
                             }
 
-                            // 6. Kreiraj rezervaciju
+                            // 6. PROVERA: da li korisnik već ima neku rezervaciju koja se vremenski preklapa
+                            var sveKorisnikoveRezervacije = await _rezervacijaService.GetRezervacijaByKorisnikId(korisnik.korisnikId);
+                            var sveRelevantneRezervacije = sveKorisnikoveRezervacije
+                                .Concat(rezervacijeKojeSeUvoze.Where(r => r.korisnikId == korisnik.korisnikId));
+
+                            bool korisnikImaPreklapanje = sveRelevantneRezervacije
+                                .Any(r => r.pocetniDatum < odlazak && r.krajnjiDatum > dolazak);
+
+                            if (korisnikImaPreklapanje)
+                            {
+                                MessageBox.Show($"Korisnik '{gost}' već ima rezervaciju koja se preklapa sa periodom {dolazak.ToShortDateString()} - {odlazak.ToShortDateString()}.",
+                                                "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                                sveRezervacijeUspele = false;
+                                continue;
+                            }
+
+                            // 7. Kreiraj rezervaciju
                             var rezervacija = new Rezervacija
                             {
                                 pocetniDatum = dolazak,
@@ -867,6 +957,7 @@ namespace HotelManagment.Pages
                             try
                             {
                                 await _rezervacijaService.AddRezervacija(rezervacija);
+                                rezervacijeKojeSeUvoze.Add(rezervacija); // Dodaj novu rezervaciju u listu
                             }
                             catch (Exception ex)
                             {
@@ -894,97 +985,11 @@ namespace HotelManagment.Pages
                     MessageBox.Show(
                         $"Došlo je do greške: {ex.Message}\n" +
                         $"Detalji: {ex.InnerException?.Message}",
-                        "Greška",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                        "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-        }*/
-        /*private async void PostaviCenuApartmana()
-        {
-            //Za GRANICNI DATUM 01.07-20.07 20.07-31.07 za 20.07 uzece vrednost od 01.07-20.07 intervala!!!
-            if (ApartmentComboBox.SelectedItem is Apartman selectedApartman && StartDatePicker.SelectedDate.HasValue && EndDatePicker.SelectedDate.HasValue)
-            {
-                DateTime datumOd = StartDatePicker.SelectedDate.Value;
-                DateTime datumDo = EndDatePicker.SelectedDate.Value;
+        }
 
-                if (datumDo <= datumOd)
-                {
-                    MessageBox.Show("Datum odlaska mora biti posle datuma dolaska.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                try
-                {
-                    var cenaApartmanaList = await _cenaApartmanaService.GetAllCenaApartmana();
-
-                    var relevantPrices = cenaApartmanaList
-                        .Where(cena => cena.apartmanId == selectedApartman.apartmanId)
-                        .ToList();
-
-                    if (relevantPrices.Count == 0)
-                    {
-                        MessageBox.Show("Nema dostupnih cena za izabrani apartman.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
-                    double ukupnaCena = 0;
-                    DateTime trenutniDatum = datumOd;
-
-                    while (trenutniDatum < datumDo)
-                    {
-                        var cenaZaDan = relevantPrices.FirstOrDefault(cena =>
-                            cena.pocetniDatum.Date <= trenutniDatum.Date &&
-                            cena.krajnjiDatum.Date >= trenutniDatum.Date);
-
-                        if (cenaZaDan == null)
-                        {
-                            MessageBox.Show($"Nema definisane cene za datum {trenutniDatum:dd.MM.yyyy}.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
-
-                        double cenaPoNoci = (double)cenaZaDan.cenaPoNoci;
-
-                        if (!string.Equals(selectedApartman.tipApartmana?.nazivTipaApartmana, "Apartman", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (!int.TryParse(GuestCountComboBox.Text, out int brojGostiju) || brojGostiju <= 0)
-                            {
-                                MessageBox.Show("Unesite validan broj gostiju.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                return;
-                            }
-                            cenaPoNoci *= brojGostiju;
-                        }
-
-                        ukupnaCena += cenaPoNoci;
-
-                        // DEBUG poruka
-                        Console.WriteLine($"Datum: {trenutniDatum:dd.MM.yyyy}, Cena: {cenaPoNoci}");
-
-                        trenutniDatum = trenutniDatum.AddDays(1);
-                    }
-
-                    // Primeni popust
-                    string selectedDiscountText = (DiscountComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
-                    double popustProcenat = 0;
-
-                    if (!string.IsNullOrEmpty(selectedDiscountText) && double.TryParse(selectedDiscountText.TrimEnd('%'), out popustProcenat))
-                    {
-                        popustProcenat /= 100;
-                    }
-
-                    double iznosPopusta = ukupnaCena * popustProcenat;
-                    double konacnaCena = ukupnaCena - iznosPopusta;
-
-                    PriceTextBox.Text = konacnaCena.ToString("F2");
-
-                    MessageBox.Show($"Konačna cena: {konacnaCena:F2}", "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Greška pri dohvatanju cene apartmana: {ex.Message}", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }*/
         private async void PostaviCenuApartmana()
         {
             //Za GRANICNI DATUM 01.07-20.07 20.07-31.07 za 20.07 uzece vrednost od 01.07-20.07 intervala!!!

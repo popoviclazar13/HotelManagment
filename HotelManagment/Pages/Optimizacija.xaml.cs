@@ -60,7 +60,7 @@ namespace HotelManagment.Pages
                     BrojKrevetaComboBox.Items.Clear();
                     BrojKrevetaComboBox.Items.Add("Odaberite broj kreveta"); // Default opcija
 
-                    var brojeviKreveta = _sviApartmani.Select(a => a.ukupniKapacitet).Distinct().OrderBy(k => k).ToList();
+                    var brojeviKreveta = _sviApartmani.Select(a => a.kapacitetOdrasli).Distinct().OrderBy(k => k).ToList();
 
                     foreach (var brojKreveta in brojeviKreveta)
                     {

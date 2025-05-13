@@ -27,9 +27,9 @@ namespace HotelManagment.Pages
         }
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // Provera da li je trenutni datum veći od 1. septembra tekuće godine
+            // Provera da li je trenutni datum veći od 1. Oktobra tekuće godine
             DateTime today = DateTime.Today;
-            DateTime cutoffDate = new DateTime(today.Year, 9, 1);
+            DateTime cutoffDate = new DateTime(today.Year, 10, 1);
 
             if (today >= cutoffDate)
             {

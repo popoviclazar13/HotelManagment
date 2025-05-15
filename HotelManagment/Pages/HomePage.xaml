@@ -76,6 +76,17 @@
             </StackPanel>
         </Grid>
 
+        <!-- Novi red sa dugmetom Kalendar -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,90,0,0" HorizontalAlignment="Center">
+            <Button Width="130" Height="50" FontSize="16" Margin="10"
+        Background="LightGray" Foreground="Black" Click="Kalendar_Click">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE787;" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16"  Foreground="DodgerBlue"/>
+                    <TextBlock Text="Kalendar" VerticalAlignment="Center" FontSize="16"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
         <!-- Panel za Zgrade -->
         <WrapPanel x:Name="BuildingsPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Margin="0,60,0,0">
             <!-- Dinamički će biti dodati dugmadi za svaku Zgradu -->

@@ -1,0 +1,36 @@
+﻿<Page x:Class="HotelManagment.Pages.Kalendar"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HotelManagment.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Kalendar">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Filter meseci -->
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Prikaži mesec: " VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="MesecComboBox" Width="150" SelectionChanged="MesecComboBox_SelectionChanged">
+                <ComboBoxItem Content="Jun" Tag="6"/>
+                <ComboBoxItem Content="Jul" Tag="7"/>
+                <ComboBoxItem Content="Avgust" Tag="8"/>
+                <ComboBoxItem Content="Septembar" Tag="9"/>
+            </ComboBox>
+        </StackPanel>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <DataGrid x:Name="KalendarGrid"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      CanUserAddRows="False"
+                      IsReadOnly="True" />
+        </ScrollViewer>
+    </Grid>
+</Page>

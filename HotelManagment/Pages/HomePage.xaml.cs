@@ -125,5 +125,9 @@ namespace HotelManagment.Pages
         {
             NavigationService?.Navigate(new Optimizacija(_rezervacijaService, _apartmanService, _tipApartmanaService));
         }
+        private void Kalendar_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new Kalendar(_rezervacijaService, _apartmanService));
+        }
     }
 }

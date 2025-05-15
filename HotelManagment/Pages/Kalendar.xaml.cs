@@ -90,7 +90,7 @@ namespace HotelManagment.Pages
 
                 var cellStyle = new Style(typeof(DataGridCell));
                 cellStyle.Setters.Add(new Setter(DataGridCell.BorderThicknessProperty, new Thickness(0)));
-                cellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, Brushes.Red));
+                cellStyle.Setters.Add(new Setter(DataGridCell.BackgroundProperty, Brushes.Orange));
                 cellStyle.Setters.Add(new Setter(DataGridCell.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
                 cellStyle.Setters.Add(new Setter(DataGridCell.VerticalContentAlignmentProperty, VerticalAlignment.Center));
 
